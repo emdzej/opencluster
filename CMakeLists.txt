@@ -43,6 +43,7 @@ set(PROJECT_INCLUDE_DIRS
 set(CORE_SOURCES
     core/vehicle_data.c
     core/skin_registry.c
+    core/layout.c
 )
 
 # Sources used by can_simulator (no LVGL dependency)
@@ -58,6 +59,8 @@ set(HAL_DESKTOP_SOURCES
 set(SKIN_SOURCES
     skins/tachometer/skin_tachometer.c
     skins/speedometer/skin_speedometer.c
+    skins/fuel_gauge/skin_fuel_gauge.c
+    skins/coolant_temp/skin_coolant_temp.c
 )
 
 # Sources that require LVGL (display, input, skins)
