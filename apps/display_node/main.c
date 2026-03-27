@@ -30,6 +30,13 @@ extern const gauge_skin_t skin_speedometer;
 extern const gauge_skin_t skin_fuel_gauge;
 extern const gauge_skin_t skin_coolant_temp;
 
+/* BMW E46 skins */
+extern const gauge_skin_t skin_e46_fuel;
+extern const gauge_skin_t skin_e46_speedometer;
+extern const gauge_skin_t skin_e46_tach_7k;
+extern const gauge_skin_t skin_e46_tach_6k;
+extern const gauge_skin_t skin_e46_coolant;
+
 static volatile bool s_running = true;
 
 static void signal_handler(int sig)
@@ -62,7 +69,7 @@ static void print_usage(void)
            "\n"
            "Multi-gauge mode:\n"
            "  --layout NAME    Layout template (single, dual_horizontal,\n"
-           "                   dual_vertical, quad)\n"
+           "                   dual_vertical, quad, e46_cluster)\n"
            "  --slot0 NAME     Skin for slot 0\n"
            "  --slot1 NAME     Skin for slot 1\n"
            "  --slot2 NAME     Skin for slot 2\n"
@@ -72,7 +79,10 @@ static void print_usage(void)
            "  display_node --skin tachometer --width 240 --height 240\n"
            "  display_node --layout dual_horizontal --slot0 speedometer --slot1 tachometer\n"
            "  display_node --layout quad --slot0 speedometer --slot1 tachometer "
-           "--slot2 fuel_gauge --slot3 coolant_temp\n");
+           "--slot2 fuel_gauge --slot3 coolant_temp\n"
+           "  display_node --layout e46_cluster --width 800 --height 480\n"
+           "  display_node --layout e46_cluster --slot2 e46_tach_6k "
+           "--width 800 --height 480\n");
 }
 
 static void parse_args(int argc, char **argv, app_config_t *cfg)
@@ -144,6 +154,13 @@ int main(int argc, char **argv)
     skin_registry_register(&skin_fuel_gauge);
     skin_registry_register(&skin_coolant_temp);
 
+    /* BMW E46 skins */
+    skin_registry_register(&skin_e46_fuel);
+    skin_registry_register(&skin_e46_speedometer);
+    skin_registry_register(&skin_e46_tach_7k);
+    skin_registry_register(&skin_e46_tach_6k);
+    skin_registry_register(&skin_e46_coolant);
+
     /* Register built-in layouts */
     layout_register_builtins();
 
@@ -194,11 +211,18 @@ int main(int argc, char **argv)
         for (int i = 0; i < tmpl->slot_count; i++) {
             const char *skin_name = cfg.slot_skins[i];
             if (!skin_name) {
-                /* Default skin assignments if not specified */
-                static const char *defaults[] = {
+                /* Default skin assignments depend on layout */
+                static const char *defaults_generic[] = {
                     "speedometer", "tachometer", "fuel_gauge", "coolant_temp"
                 };
-                skin_name = defaults[i];
+                static const char *defaults_e46[] = {
+                    "e46_fuel", "e46_speedometer", "e46_tach_7k", "e46_coolant"
+                };
+                if (strcmp(tmpl->name, "e46_cluster") == 0) {
+                    skin_name = defaults_e46[i];
+                } else {
+                    skin_name = defaults_generic[i];
+                }
             }
 
             const gauge_skin_t *skin = skin_registry_find(skin_name);
@@ -284,6 +308,12 @@ int main(int argc, char **argv)
                     break;
                 case CAN_ID_FUEL_ELEC:
                     can_decode_fuel_elec(&can_frame, vd);
+                    break;
+                case CAN_ID_EXTENDED:
+                    can_decode_extended(&can_frame, vd);
+                    break;
+                case CAN_ID_COMMAND:
+                    can_decode_command(&can_frame, vd);
                     break;
                 default:
                     break;

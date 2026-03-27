@@ -20,6 +20,7 @@ extern "C" {
 #define CAN_ID_ENGINE       0x100
 #define CAN_ID_DRIVETRAIN   0x101
 #define CAN_ID_FUEL_ELEC    0x102
+#define CAN_ID_EXTENDED     0x103
 #define CAN_ID_COMMAND      0x200
 #define CAN_ID_HEARTBEAT    0x300
 
@@ -67,6 +68,34 @@ static inline void can_encode_fuel_elec(const vehicle_data_t *d, can_frame_t *f)
     f->data[7] = 0;
 }
 
+static inline void can_encode_extended(const vehicle_data_t *d, can_frame_t *f)
+{
+    f->id  = CAN_ID_EXTENDED;
+    f->len = 8;
+    f->data[0] = (uint8_t)(d->fuel_consumption_x10 >> 8);
+    f->data[1] = (uint8_t)(d->fuel_consumption_x10 & 0xFF);
+    f->data[2] = (uint8_t)d->ambient_temp_c;
+    f->data[3] = 0;
+    f->data[4] = 0;
+    f->data[5] = 0;
+    f->data[6] = 0;
+    f->data[7] = 0;
+}
+
+static inline void can_encode_command(const vehicle_data_t *d, can_frame_t *f)
+{
+    f->id  = CAN_ID_COMMAND;
+    f->len = 8;
+    f->data[0] = d->backlight;   /* 0=off, 1-255=on (brightness) */
+    f->data[1] = 0;
+    f->data[2] = 0;
+    f->data[3] = 0;
+    f->data[4] = 0;
+    f->data[5] = 0;
+    f->data[6] = 0;
+    f->data[7] = 0;
+}
+
 /* ---- Decoding (CAN frame -> vehicle_data_t fields) ---- */
 
 static inline void can_decode_engine(const can_frame_t *f, vehicle_data_t *d)
@@ -90,6 +119,17 @@ static inline void can_decode_fuel_elec(const can_frame_t *f, vehicle_data_t *d)
     d->fuel_level_pct = f->data[0];
     d->battery_mv     = (uint16_t)((f->data[1] << 8) | f->data[2]);
     d->warning_flags  = (uint16_t)((f->data[3] << 8) | f->data[4]);
+}
+
+static inline void can_decode_extended(const can_frame_t *f, vehicle_data_t *d)
+{
+    d->fuel_consumption_x10 = (uint16_t)((f->data[0] << 8) | f->data[1]);
+    d->ambient_temp_c       = (int8_t)f->data[2];
+}
+
+static inline void can_decode_command(const can_frame_t *f, vehicle_data_t *d)
+{
+    d->backlight = f->data[0];
 }
 
 #ifdef __cplusplus

@@ -61,6 +61,13 @@ typedef struct {
     uint16_t battery_mv;       /**< 0-20000 millivolts */
     uint16_t warning_flags;    /**< Bitmask, see WARN_* */
 
+    /* Extended -- CAN ID 0x103 */
+    uint16_t fuel_consumption_x10; /**< L/100km * 10 (0=no data, e.g. 75 = 7.5 L/100km) */
+    int8_t   ambient_temp_c;       /**< Ambient temperature, -40 to 125 */
+
+    /* Commands -- CAN ID 0x200 */
+    uint8_t  backlight;            /**< 0=off, 1-255=on (brightness level) */
+
     /* Metadata */
     uint32_t last_update_ms;   /**< Timestamp of last CAN update */
 } vehicle_data_t;

@@ -37,19 +37,23 @@ typedef struct {
     float coolant_temp;
     float fuel_level;
     float throttle;
+    float fuel_consumption; /* L/100km */
     int   gear;
+    bool  backlight;        /* Instrument backlight on/off */
     float time_s;
 } sim_state_t;
 
 static void sim_init(sim_state_t *sim)
 {
-    sim->rpm          = 800.0f;    /* idle */
-    sim->speed        = 0.0f;
-    sim->coolant_temp = 20.0f;    /* cold start */
-    sim->fuel_level   = 75.0f;
-    sim->throttle     = 0.0f;
-    sim->gear         = 0;        /* neutral */
-    sim->time_s       = 0.0f;
+    sim->rpm              = 800.0f;    /* idle */
+    sim->speed            = 0.0f;
+    sim->coolant_temp     = 20.0f;    /* cold start */
+    sim->fuel_level       = 75.0f;
+    sim->throttle         = 0.0f;
+    sim->fuel_consumption = 0.0f;
+    sim->gear             = 0;        /* neutral */
+    sim->backlight        = false;    /* headlights off at start */
+    sim->time_s           = 0.0f;
 }
 
 /**
@@ -114,6 +118,29 @@ static void sim_step(sim_state_t *sim, float dt)
     /* Fuel: very slowly decreases */
     sim->fuel_level -= dt * 0.02f;
     if (sim->fuel_level < 0.0f) sim->fuel_level = 100.0f;  /* refill */
+
+    /* Fuel consumption model (L/100km):
+     * Idle: ~1.5 L/100km equivalent, cruising: ~7-8, hard accel: ~15-25 */
+    if (sim->speed > 5.0f) {
+        /* Consumption proportional to throttle and inversely to speed */
+        float base = 5.0f + sim->throttle * 0.2f;
+        float speed_factor = 80.0f / fmaxf(sim->speed, 20.0f);
+        sim->fuel_consumption += (base * speed_factor - sim->fuel_consumption) * dt * 2.0f;
+    } else {
+        /* At standstill, show ~0 or very high if engine running */
+        sim->fuel_consumption += (0.0f - sim->fuel_consumption) * dt * 2.0f;
+    }
+    if (sim->fuel_consumption < 0.0f) sim->fuel_consumption = 0.0f;
+    if (sim->fuel_consumption > 30.0f) sim->fuel_consumption = 30.0f;
+
+    /* Backlight: off for first 5 seconds, then toggles every 15s for demo */
+    if (sim->time_s < 5.0f) {
+        sim->backlight = false;
+    } else {
+        /* Toggle every 15 seconds after initial 5s delay */
+        int period = (int)((sim->time_s - 5.0f) / 15.0f);
+        sim->backlight = (period % 2 == 0);
+    }
 }
 
 static void sim_to_vehicle_data(const sim_state_t *sim, vehicle_data_t *vd)
@@ -129,6 +156,9 @@ static void sim_to_vehicle_data(const sim_state_t *sim, vehicle_data_t *vd)
     vd->fuel_level_pct  = (uint8_t)sim->fuel_level;
     vd->battery_mv      = 13800;
     vd->warning_flags   = 0;
+    vd->fuel_consumption_x10 = (uint16_t)(sim->fuel_consumption * 10.0f);
+    vd->ambient_temp_c  = 22;
+    vd->backlight       = sim->backlight ? 255 : 0;
 
     /* Trigger low fuel warning below 15% */
     if (sim->fuel_level < 15.0f) {
@@ -191,6 +221,10 @@ int main(int argc, char **argv)
         if (now - last_fuel_ms >= 200) {
             can_encode_fuel_elec(&vd, &frame);
             hal_can_send(&frame);
+            can_encode_extended(&vd, &frame);
+            hal_can_send(&frame);
+            can_encode_command(&vd, &frame);
+            hal_can_send(&frame);
             last_fuel_ms = now;
         }
 
@@ -198,13 +232,14 @@ int main(int argc, char **argv)
         if (now - last_print_ms >= 2000) {
             float elapsed = (float)(now - start_ms) / 1000.0f;
             printf("[%6.1fs] RPM: %5d | Speed: %5.1f km/h | Gear: %d | "
-                   "Temp: %4.1f C | Fuel: %4.1f%%\n",
+                   "Temp: %4.1f C | Fuel: %4.1f%% | BL: %s\n",
                    elapsed,
                    vd.rpm,
                    (float)vd.speed_kmh_x10 / 10.0f,
                    vd.gear,
                    (float)vd.coolant_temp_c,
-                   (float)vd.fuel_level_pct);
+                   (float)vd.fuel_level_pct,
+                   vd.backlight ? "ON" : "OFF");
             last_print_ms = now;
         }
 

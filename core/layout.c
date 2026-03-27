@@ -49,6 +49,25 @@ const layout_template_t layout_quad = {
     },
 };
 
+/**
+ * BMW E46 asymmetric cluster: two small side gauges, two large center gauges.
+ * Designed for 800x480 but scales to any resolution.
+ * Slot 0: Fuel (small, left)
+ * Slot 1: Speedometer (large, center-left)
+ * Slot 2: Tachometer (large, center-right)
+ * Slot 3: Coolant (small, right)
+ */
+const layout_template_t layout_e46_cluster = {
+    .name       = "e46_cluster",
+    .slot_count = 4,
+    .slots      = {
+        { .x = 0,   .y = 0, .w = 175, .h = 1000 },   /* Fuel — small left */
+        { .x = 175, .y = 0, .w = 325, .h = 1000 },   /* Speedo — large center-left */
+        { .x = 500, .y = 0, .w = 325, .h = 1000 },   /* Tacho — large center-right */
+        { .x = 825, .y = 0, .w = 175, .h = 1000 },   /* Coolant — small right */
+    },
+};
+
 /* ── Layout registry ────────────────────────────────────────────────── */
 
 static const layout_template_t *s_layouts[LAYOUT_REGISTRY_MAX];
@@ -64,6 +83,7 @@ void layout_register_builtins(void)
     layout_registry_register(&layout_dual_horizontal);
     layout_registry_register(&layout_dual_vertical);
     layout_registry_register(&layout_quad);
+    layout_registry_register(&layout_e46_cluster);
 }
 
 int layout_registry_register(const layout_template_t *tmpl)

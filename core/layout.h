@@ -79,6 +79,9 @@ extern const layout_template_t layout_dual_vertical;
 /** 2x2 grid of four gauges. */
 extern const layout_template_t layout_quad;
 
+/** BMW E46 asymmetric: small-large-large-small (fuel, speedo, tacho, coolant). */
+extern const layout_template_t layout_e46_cluster;
+
 /* ── Layout registry ────────────────────────────────────────────────── */
 
 /**

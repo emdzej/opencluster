@@ -37,6 +37,7 @@ target_link_libraries(lvgl PUBLIC Threads::Threads)
 set(PROJECT_INCLUDE_DIRS
     ${CMAKE_CURRENT_SOURCE_DIR}/hal/include
     ${CMAKE_CURRENT_SOURCE_DIR}/core
+    ${CMAKE_CURRENT_SOURCE_DIR}/skins/e46
 )
 
 # ── Shared source files (core + HAL desktop + skins) ────────────────────
@@ -61,6 +62,10 @@ set(SKIN_SOURCES
     skins/speedometer/skin_speedometer.c
     skins/fuel_gauge/skin_fuel_gauge.c
     skins/coolant_temp/skin_coolant_temp.c
+    skins/e46/e46_fuel.c
+    skins/e46/e46_speedometer.c
+    skins/e46/e46_tachometer.c
+    skins/e46/e46_coolant.c
 )
 
 # Sources that require LVGL (display, input, skins)
