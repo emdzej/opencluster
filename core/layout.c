@@ -172,9 +172,12 @@ int layout_set_skin(layout_state_t *state, int slot,
         return 0;
     }
 
-    /* Get the slot container's pixel size */
-    int slot_w = lv_obj_get_width(ss->cont);
-    int slot_h = lv_obj_get_height(ss->cont);
+    /* Compute the slot's pixel size from the template (don't use
+     * lv_obj_get_width/height -- LVGL may not have run a layout
+     * pass yet, so those would return 0). */
+    const layout_slot_t *slot_def = &state->tmpl->slots[slot];
+    int slot_w = permille_to_px(slot_def->w, state->screen_w);
+    int slot_h = permille_to_px(slot_def->h, state->screen_h);
 
     /* Create the skin inside this slot's container */
     void *ctx = skin->create(ss->cont, slot_w, slot_h);

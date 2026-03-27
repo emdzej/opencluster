@@ -105,6 +105,18 @@ int hal_can_receive(can_frame_t *frame, uint32_t timeout_ms)
 {
     if (sock_recv < 0 || !frame) return -1;
 
+    if (timeout_ms == 0) {
+        /* Non-blocking: use MSG_DONTWAIT instead of SO_RCVTIMEO,
+         * because a zero-valued SO_RCVTIMEO means "block forever"
+         * on most platforms. */
+        ssize_t n = recvfrom(sock_recv, frame, sizeof(can_frame_t),
+                             MSG_DONTWAIT, NULL, NULL);
+        if (n == (ssize_t)sizeof(can_frame_t)) {
+            return 0;
+        }
+        return -1; /* no data available */
+    }
+
     /* Set receive timeout */
     struct timeval tv;
     tv.tv_sec  = timeout_ms / 1000;
@@ -112,7 +124,7 @@ int hal_can_receive(can_frame_t *frame, uint32_t timeout_ms)
     setsockopt(sock_recv, SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof(tv));
 
     ssize_t n = recvfrom(sock_recv, frame, sizeof(can_frame_t), 0, NULL, NULL);
-    if (n == sizeof(can_frame_t)) {
+    if (n == (ssize_t)sizeof(can_frame_t)) {
         return 0;
     } else if (n < 0 && (errno == EAGAIN || errno == EWOULDBLOCK)) {
         return -1; /* timeout */
