@@ -16,37 +16,34 @@ The architecture is designed around three principles:
 
 ## System Architecture
 
-```
- ┌──────────────────────────────────────────────────────────────────────┐
- │                        Vehicle / External                           │
- │  [OBD-II / Vehicle CAN]   [BMW IBUS/KBUS]   [LIN]   [MOST]        │
- └──────────┬─────────────────────┬──────────────┬────────┬────────────┘
-            │                     │              │        │
-            v                     v              v        v
- ┌──────────────────────────────────────────────────────────────────────┐
- │                       Master Node (Gateway)                         │
- │                                                                     │
- │  - Reads vehicle CAN bus (OBD-II PIDs or raw frames)                │
- │  - Hosts gateway translators for non-CAN buses (IBUS, LIN, etc.)   │
- │  - Normalizes all data into the Cluster Bus protocol                │
- │  - Rebroadcasts on the dedicated Cluster CAN Bus                    │
- │                                                                     │
- │  May or may not have a display. Can be a headless CAN gateway.      │
- └──────────────────────────┬───────────────────────────────────────────┘
-                            │
-                   Cluster CAN Bus (CAN 2.0B)
-                            │
-            ┌───────────────┼───────────────┐
-            │               │               │
-            v               v               v
- ┌──────────────┐ ┌──────────────┐ ┌──────────────┐
- │ Display      │ │ Display      │ │ Display      │
- │ Node 1       │ │ Node 2       │ │ Node N       │
- │              │ │              │ │              │
- │ ESP32-S3     │ │ ESP32-S3     │ │ ESP32-S3     │
- │ Round 240x240│ │ Rect 480x320 │ │ ...          │
- │ Tachometer   │ │ Speedo+Fuel  │ │              │
- └──────────────┘ └──────────────┘ └──────────────┘
+```mermaid
+graph TD
+    subgraph Vehicle / External
+        OBD[OBD-II / Vehicle CAN]
+        IBUS[BMW IBUS/KBUS]
+        LIN[LIN]
+        MOST[MOST]
+    end
+
+    OBD --> Master
+    IBUS --> Master
+    LIN --> Master
+    MOST --> Master
+
+    subgraph Master[Master Node - Gateway]
+        M1[Reads vehicle CAN bus]
+        M2[Gateway translators for non-CAN buses]
+        M3[Normalizes to Cluster Bus protocol]
+        M4[Rebroadcasts on Cluster CAN Bus]
+    end
+
+    Master -->|Cluster CAN Bus\nCAN 2.0B| DN1
+    Master -->|Cluster CAN Bus| DN2
+    Master -->|Cluster CAN Bus| DNN
+
+    DN1[Display Node 1\nESP32-S3\nRound 240x240\nTachometer]
+    DN2[Display Node 2\nESP32-S3\nRect 480x320\nSpeedo+Fuel]
+    DNN[Display Node N\nESP32-S3\n...]
 ```
 
 ### Node Roles
@@ -237,18 +234,18 @@ typedef enum {
 
 All input eventually becomes either a local LVGL event or a cluster bus command (or both).
 
-```
-  [Steering wheel]     [BMW IBUS]     [Touchscreen]    [Physical buttons]
-       |                   |               |                  |
-   (vehicle CAN)     (gateway MCU)     (local LVGL)      (local GPIO)
-       |                   |               |                  |
-       v                   v               v                  v
-  ┌─────────────────────────────────────────────────────────────┐
-  │                    Cluster CAN Bus                          │
-  │  CAN ID 0x200: Command messages                            │
-  └─────────────────────────────────────────────────────────────┘
-       |              |              |
-    [Node 1]       [Node 2]      [Node N]
+```mermaid
+graph TD
+    SW[Steering wheel] -->|vehicle CAN| BUS
+    IB[BMW IBUS] -->|gateway MCU| BUS
+    TS[Touchscreen] -->|local LVGL| BUS
+    PB[Physical buttons] -->|local GPIO| BUS
+
+    BUS[Cluster CAN Bus\nCAN ID 0x200: Command messages]
+
+    BUS --> N1[Node 1]
+    BUS --> N2[Node 2]
+    BUS --> NN[Node N]
 ```
 
 ### Input Rules
@@ -273,37 +270,23 @@ All input eventually becomes either a local LVGL event or a cluster bus command 
 
 ### CAN Receiver Path (display node)
 
-```
-Cluster CAN Bus
-    │
-    v
-hal_can_receive()           -- HAL layer (UDP or TWAI)
-    │
-    v
-can_receiver_task()         -- FreeRTOS task / POSIX thread
-    │
-    ├─ Vehicle data (0x100-0x1FF) ──> vehicle_data_update() ──> vehicle_data_t [mutex]
-    │
-    └─ Commands (0x200-0x2FF) ──> command_handler() ──> skin/layout changes
+```mermaid
+graph TD
+    CAN[Cluster CAN Bus] --> HAL[hal_can_receive\nHAL layer - UDP or TWAI]
+    HAL --> TASK[can_receiver_task\nFreeRTOS task / POSIX thread]
+    TASK -->|Vehicle data\n0x100-0x1FF| VDU[vehicle_data_update]
+    VDU --> VD[vehicle_data_t\nmutex protected]
+    TASK -->|Commands\n0x200-0x2FF| CMD[command_handler\nskin/layout changes]
 ```
 
 ### Render Path
 
-```
-LVGL timer tick (~33ms / 30fps)
-    │
-    v
-layout_update()
-    │
-    v
-for each slot:
-    skin->update(ctx, &vehicle_data)    -- reads vehicle_data_t [mutex]
-    │
-    v
-LVGL renders dirty widgets to framebuffer
-    │
-    v
-hal_display flush ──> SDL2 window / SPI display
+```mermaid
+graph TD
+    TICK[LVGL timer tick\n~33ms / 30fps] --> LAYOUT[layout_update]
+    LAYOUT --> SKIN["for each slot:\nskin->update(ctx, &vehicle_data)\nreads vehicle_data_t via mutex"]
+    SKIN --> RENDER[LVGL renders dirty widgets\nto framebuffer]
+    RENDER --> FLUSH[hal_display flush\nSDL2 window / SPI display]
 ```
 
 ---
@@ -314,18 +297,12 @@ hal_display flush ──> SDL2 window / SPI display
 
 The POC runs as two (or more) separate OS processes on the desktop:
 
-```
-┌─────────────────────┐     UDP Multicast      ┌─────────────────────┐
-│   can_simulator      │    224.0.0.100:4200    │   display_node      │
-│                      │ ────────────────────── │                     │
-│  Generates fake      │                        │  LVGL + SDL2 window │
-│  vehicle CAN data    │                        │  Renders gauges     │
-│  (ramps, waves,      │                        │                     │
-│   random failures)   │     UDP Multicast      │                     │
-│                      │ ────────────────────── │   display_node (2)  │
-│                      │                        │  Second instance    │
-│                      │                        │  Different config   │
-└─────────────────────┘                        └─────────────────────┘
+```mermaid
+graph LR
+    SIM[can_simulator\nGenerates fake\nvehicle CAN data\nramps, waves,\nrandom failures]
+
+    SIM -->|UDP Multicast\n224.0.0.100:4200| DN1[display_node\nLVGL + SDL2 window\nRenders gauges]
+    SIM -->|UDP Multicast\n224.0.0.100:4200| DN2[display_node 2\nSecond instance\nDifferent config]
 ```
 
 - `can_simulator` broadcasts CAN frames via UDP multicast
@@ -359,8 +336,7 @@ cmake --build build
 opencluster/
 ├── CMakeLists.txt                  # Top-level build (desktop vs ESP-IDF)
 ├── components/
-│   ├── lvgl/                       # LVGL 9.x (git submodule)
-│   └── lv_drivers/                 # LVGL drivers (SDL2 for desktop)
+│   └── lvgl/                       # LVGL 9.x (git submodule, includes SDL2 driver)
 ├── hal/
 │   ├── include/
 │   │   ├── hal_display.h

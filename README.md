@@ -23,20 +23,8 @@ displays. It supports:
 
 ## Architecture
 
-```
-  [Vehicle CAN Bus]
-        |
-  [Master Node]  -- reads vehicle data, normalizes, rebroadcasts
-        |
-  [Cluster CAN Bus]
-        |
-   ┌────┼────┐
-   |    |    |
- [Display Nodes]  -- each renders gauges via LVGL
-```
-
-See [ARCHITECTURE.md](docs/ARCHITECTURE.md) for the full system design.
-See [CLUSTER_BUS_SPEC.md](docs/CLUSTER_BUS_SPEC.md) for the CAN protocol.
+See [ARCHITECTURE.md](docs/ARCHITECTURE.md) for the full system design and
+[CLUSTER_BUS_SPEC.md](docs/CLUSTER_BUS_SPEC.md) for the CAN protocol specification.
 
 ## Hardware
 
@@ -124,8 +112,7 @@ cluster where each screen is an independent ESP32.
 opencluster/
 ├── CMakeLists.txt              # Top-level build
 ├── components/
-│   ├── lvgl/                   # LVGL 9.x (submodule)
-│   └── lv_drivers/             # LVGL display/input drivers
+│   └── lvgl/                   # LVGL 9.x (submodule, includes SDL2 driver)
 ├── hal/                        # Hardware abstraction layer
 │   ├── include/                # HAL interface headers
 │   ├── desktop/                # SDL2 + UDP + POSIX implementations
