@@ -24,6 +24,11 @@
 #include "skin_registry.h"
 #include "layout.h"
 
+/* SDL2 for screenshot BMP saving */
+#include <SDL.h>
+#include "src/drivers/sdl/lv_sdl_window.h"
+#include "src/draw/snapshot/lv_snapshot.h"
+
 /* External skin declarations */
 extern const gauge_skin_t skin_tachometer;
 extern const gauge_skin_t skin_speedometer;
@@ -53,6 +58,14 @@ typedef struct {
     const char *layout_name;    /* Layout mode (overrides skin_name) */
     const char *slot_skins[LAYOUT_MAX_SLOTS];  /* Skin per slot */
     uint8_t     node_id;
+    const char *screenshot_path; /* If set, render one frame and save to this path */
+    int         screenshot_rpm;
+    int         screenshot_speed_x10;
+    int         screenshot_fuel;
+    int         screenshot_coolant;
+    int         screenshot_gear;
+    int         screenshot_backlight;
+    int         screenshot_consumption_x10;
 } app_config_t;
 
 static void print_usage(void)
@@ -75,6 +88,16 @@ static void print_usage(void)
            "  --slot2 NAME     Skin for slot 2\n"
            "  --slot3 NAME     Skin for slot 3\n"
            "\n"
+           "Screenshot mode (render one frame and exit):\n"
+           "  --screenshot FILE   Save screenshot as BMP to FILE\n"
+           "  --rpm N             RPM value for screenshot (default: 3500)\n"
+           "  --speed N           Speed in km/h for screenshot (default: 120)\n"
+           "  --fuel N            Fuel level 0-100 (default: 65)\n"
+           "  --coolant N         Coolant temp in C (default: 90)\n"
+           "  --gear N            Gear 0=N,1-8,255=R (default: 4)\n"
+           "  --backlight N       Backlight 0=off,1-255=on (default: 0)\n"
+           "  --consumption N     Fuel consumption L/100km*10 (default: 85)\n"
+           "\n"
            "Examples:\n"
            "  display_node --skin tachometer --width 240 --height 240\n"
            "  display_node --layout dual_horizontal --slot0 speedometer --slot1 tachometer\n"
@@ -82,7 +105,9 @@ static void print_usage(void)
            "--slot2 fuel_gauge --slot3 coolant_temp\n"
            "  display_node --layout e46_cluster --width 800 --height 480\n"
            "  display_node --layout e46_cluster --slot2 e46_tach_6k "
-           "--width 800 --height 480\n");
+           "--width 800 --height 480\n"
+           "  display_node --screenshot e46.bmp --layout e46_cluster "
+           "--width 800 --height 480 --rpm 4500 --speed 140\n");
 }
 
 static void parse_args(int argc, char **argv, app_config_t *cfg)
@@ -92,6 +117,14 @@ static void parse_args(int argc, char **argv, app_config_t *cfg)
     cfg->skin_name   = "tachometer";
     cfg->layout_name = NULL;
     cfg->node_id     = 1;
+    cfg->screenshot_path = NULL;
+    cfg->screenshot_rpm  = 3500;
+    cfg->screenshot_speed_x10 = 1200;  /* 120 km/h */
+    cfg->screenshot_fuel = 65;
+    cfg->screenshot_coolant = 90;
+    cfg->screenshot_gear = 4;
+    cfg->screenshot_backlight = 0;
+    cfg->screenshot_consumption_x10 = 85;  /* 8.5 L/100km */
     for (int i = 0; i < LAYOUT_MAX_SLOTS; i++) {
         cfg->slot_skins[i] = NULL;
     }
@@ -115,6 +148,22 @@ static void parse_args(int argc, char **argv, app_config_t *cfg)
             cfg->slot_skins[3] = argv[++i];
         } else if (strcmp(argv[i], "--node-id") == 0 && i + 1 < argc) {
             cfg->node_id = (uint8_t)atoi(argv[++i]);
+        } else if (strcmp(argv[i], "--screenshot") == 0 && i + 1 < argc) {
+            cfg->screenshot_path = argv[++i];
+        } else if (strcmp(argv[i], "--rpm") == 0 && i + 1 < argc) {
+            cfg->screenshot_rpm = atoi(argv[++i]);
+        } else if (strcmp(argv[i], "--speed") == 0 && i + 1 < argc) {
+            cfg->screenshot_speed_x10 = atoi(argv[++i]) * 10;
+        } else if (strcmp(argv[i], "--fuel") == 0 && i + 1 < argc) {
+            cfg->screenshot_fuel = atoi(argv[++i]);
+        } else if (strcmp(argv[i], "--coolant") == 0 && i + 1 < argc) {
+            cfg->screenshot_coolant = atoi(argv[++i]);
+        } else if (strcmp(argv[i], "--gear") == 0 && i + 1 < argc) {
+            cfg->screenshot_gear = atoi(argv[++i]);
+        } else if (strcmp(argv[i], "--backlight") == 0 && i + 1 < argc) {
+            cfg->screenshot_backlight = atoi(argv[++i]);
+        } else if (strcmp(argv[i], "--consumption") == 0 && i + 1 < argc) {
+            cfg->screenshot_consumption_x10 = atoi(argv[++i]);
         } else if (strcmp(argv[i], "--help") == 0 || strcmp(argv[i], "-h") == 0) {
             print_usage();
             exit(0);
@@ -138,6 +187,44 @@ static void print_available_layouts(void)
         const layout_template_t *l = layout_registry_get(i);
         fprintf(stderr, "  - %s (%d slots)\n", l->name, l->slot_count);
     }
+}
+
+/**
+ * Capture a screenshot using LVGL's snapshot API and save as BMP.
+ *
+ * lv_snapshot_take() renders the widget tree to an off-screen buffer,
+ * bypassing the SDL renderer entirely.  We then wrap the pixel data
+ * in an SDL_Surface and save it as BMP.
+ */
+static int screenshot_save(lv_obj_t *screen, const char *path, int width, int height)
+{
+    lv_draw_buf_t *snap = lv_snapshot_take(screen, LV_COLOR_FORMAT_ARGB8888);
+    if (!snap) {
+        fprintf(stderr, "lv_snapshot_take failed\n");
+        return -1;
+    }
+
+    SDL_Surface *surface = SDL_CreateRGBSurfaceWithFormatFrom(
+        snap->data, width, height, 32, snap->header.stride,
+        SDL_PIXELFORMAT_ARGB8888);
+    if (!surface) {
+        fprintf(stderr, "SDL_CreateRGBSurfaceWithFormatFrom failed: %s\n",
+                SDL_GetError());
+        lv_draw_buf_destroy(snap);
+        return -1;
+    }
+
+    int rc = SDL_SaveBMP(surface, path);
+    SDL_FreeSurface(surface);
+    lv_draw_buf_destroy(snap);
+
+    if (rc != 0) {
+        fprintf(stderr, "SDL_SaveBMP failed: %s\n", SDL_GetError());
+        return -1;
+    }
+
+    printf("Screenshot saved to %s\n", path);
+    return 0;
 }
 
 int main(int argc, char **argv)
@@ -179,11 +266,6 @@ int main(int argc, char **argv)
 
     /* Initialize vehicle data store */
     vehicle_data_init();
-
-    /* Initialize CAN */
-    if (hal_can_init() != 0) {
-        fprintf(stderr, "Warning: CAN init failed, running without CAN data\n");
-    }
 
     /* Set screen background to black */
     lv_obj_t *scr = lv_display_get_screen_active(disp);
@@ -288,6 +370,46 @@ int main(int argc, char **argv)
         printf("  Skin:    %s (%s)\n", skin->name, skin->display_name);
         printf("  Node ID: %d\n", cfg.node_id);
         printf("  CAN:     UDP multicast %s:%d\n", "224.0.0.100", 4200);
+    }
+
+    /* ── Screenshot mode: inject data, render, save, exit ──────── */
+    if (cfg.screenshot_path) {
+        vehicle_data_t snap = {0};
+        snap.rpm                  = (uint16_t)cfg.screenshot_rpm;
+        snap.speed_kmh_x10       = (uint16_t)cfg.screenshot_speed_x10;
+        snap.fuel_level_pct       = (uint8_t)cfg.screenshot_fuel;
+        snap.coolant_temp_c       = (int8_t)cfg.screenshot_coolant;
+        snap.gear                 = (uint8_t)cfg.screenshot_gear;
+        snap.backlight            = (uint8_t)cfg.screenshot_backlight;
+        snap.fuel_consumption_x10 = (uint16_t)cfg.screenshot_consumption_x10;
+        snap.engine_flags         = ENG_RUNNING;
+        snap.battery_mv           = 14200;
+        snap.oil_pressure_psi     = 45;
+        snap.throttle_pct         = 35;
+        snap.last_update_ms       = hal_tick_ms();
+
+        /* Update the vehicle data store so skins can read it */
+        vehicle_data_update(&snap);
+
+        /* Feed data to the layout and pump LVGL several times to
+         * ensure all widgets are fully rendered and flushed. */
+        for (int frame = 0; frame < 10; frame++) {
+            layout_update(&layout_state, &snap);
+            lv_timer_handler();
+            hal_delay_ms(20);
+        }
+
+        int rc = screenshot_save(scr, cfg.screenshot_path,
+                                 cfg.width, cfg.height);
+        layout_destroy(&layout_state);
+        return rc;
+    }
+
+    /* ── Normal interactive mode ─────────────────────────────────── */
+
+    /* Initialize CAN */
+    if (hal_can_init() != 0) {
+        fprintf(stderr, "Warning: CAN init failed, running without CAN data\n");
     }
 
     /* Main loop */

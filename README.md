@@ -21,6 +21,38 @@ displays. It supports:
   shape-aware skins
 - **Desktop simulator** -- develop and test without hardware using SDL2
 
+## Screenshots
+
+### BMW E46 Instrument Cluster
+
+Day mode and night (backlit) mode:
+
+<p>
+<img src="screenshots/e46_day.png" width="600" alt="E46 cluster - day mode">
+</p>
+<p>
+<img src="screenshots/e46_night.png" width="600" alt="E46 cluster - night mode">
+</p>
+
+### Quad Layout (Generic Gauges)
+
+Four gauges on a single 480x320 display:
+
+<p>
+<img src="screenshots/quad_generic.png" width="400" alt="Quad layout with generic gauges">
+</p>
+
+### Round Gauges (240x240)
+
+Individual gauges sized for round displays:
+
+<p>
+<img src="screenshots/tachometer.png" width="200" alt="Round tachometer at 5500 RPM">
+<img src="screenshots/speedometer.png" width="200" alt="Round speedometer at 180 km/h">
+</p>
+
+*Generated with `--screenshot` mode. See [Command-line options](#command-line-options-display_node).*
+
 ## Architecture
 
 See [ARCHITECTURE.md](docs/ARCHITECTURE.md) for the full system design and
@@ -101,10 +133,32 @@ cluster where each screen is an independent ESP32.
 | `--width` | 480 | Display width in pixels |
 | `--height` | 320 | Display height in pixels |
 | `--skin` | tachometer | Gauge skin name |
-| `--layout` | single | Layout template (single, dual_horizontal, dual_vertical, quad) |
-| `--slot0` | (skin) | Skin for layout slot 0 |
-| `--slot1` | - | Skin for layout slot 1 |
+| `--layout` | single | Layout template (single, dual_horizontal, dual_vertical, quad, e46_cluster) |
+| `--slot0`..`--slot3` | (auto) | Skin for layout slot 0-3 |
 | `--node-id` | 1 | Node ID on the cluster bus (1-254) |
+
+#### Screenshot mode
+
+Render a single frame with injected vehicle data and save as BMP, then exit.
+Useful for generating documentation images without the CAN simulator.
+
+| Option | Default | Description |
+|--------|---------|-------------|
+| `--screenshot FILE` | - | Save screenshot as BMP to FILE |
+| `--rpm N` | 3500 | Engine RPM |
+| `--speed N` | 120 | Speed in km/h |
+| `--fuel N` | 65 | Fuel level 0-100% |
+| `--coolant N` | 90 | Coolant temperature in °C |
+| `--gear N` | 4 | Gear (0=N, 1-8, 255=R) |
+| `--backlight N` | 0 | Backlight intensity (0=off, 1-255=on) |
+| `--consumption N` | 85 | Fuel consumption in L/100km * 10 |
+
+Example:
+```bash
+./build/display_node --screenshot e46.bmp \
+    --layout e46_cluster --width 800 --height 480 \
+    --rpm 4500 --speed 140 --backlight 200
+```
 
 ## Project Structure
 
@@ -125,7 +179,11 @@ opencluster/
 │   └── can_protocol.h          # CAN message encode/decode
 ├── skins/                      # Gauge skin implementations
 │   ├── tachometer/
-│   └── speedometer/
+│   ├── speedometer/
+│   ├── fuel_gauge/
+│   ├── coolant_temp/
+│   └── e46/                    # BMW E46-style needle gauges
+├── screenshots/                # Auto-generated via --screenshot mode
 ├── apps/
 │   ├── display_node/           # Main display application
 │   └── can_simulator/          # CAN data broadcaster

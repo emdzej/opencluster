@@ -151,7 +151,7 @@
  * OTHERS
  *==================*/
 
-#define LV_USE_SNAPSHOT  0
+#define LV_USE_SNAPSHOT  1
 #define LV_USE_SYSMON    0
 #define LV_USE_PROFILER  0
 
