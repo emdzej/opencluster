@@ -1,0 +1,382 @@
+(kicad_sch
+	(version 20231120)
+	(generator "eeschema")
+	(generator_version "8.0")
+	(uuid "e1b5c8f0-1234-4567-8901-234567890abc")
+	(paper "A3")
+	(title_block
+		(title "ESP32-P4 Automotive Display Controller")
+		(date "2026-04-04")
+		(rev "0.1")
+		(company "emdzej")
+		(comment 1 "2x CAN + IBUS + MIPI CSI/DSI")
+		(comment 2 "12-14V Automotive Input")
+	)
+
+	;; ============================================
+	;; POWER INPUT SECTION
+	;; ============================================
+	
+	(text "=== POWER INPUT (12-14V Automotive) ===" (at 25 30 0)
+		(effects (font (size 2 2) (thickness 0.3)) (justify left))
+	)
+
+	;; Power connector symbol placeholder
+	(symbol
+		(lib_id "Connector:Conn_01x08_Pin")
+		(at 40 55 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(uuid "j4-automotive")
+		(property "Reference" "J4"
+			(at 40 40 0)
+			(effects (font (size 1.27 1.27)))
+		)
+		(property "Value" "JST-SH-8"
+			(at 40 42 0)
+			(effects (font (size 1.27 1.27)))
+		)
+		(property "Description" "Automotive connector: 12V, GND, CAN1, CAN2, IBUS"
+			(at 40 55 0)
+			(effects (font (size 1.27 1.27)) hide)
+		)
+	)
+
+	;; TVS Diode
+	(symbol
+		(lib_id "Device:D_TVS_Bidirectional")
+		(at 70 50 0)
+		(unit 1)
+		(uuid "tvs1")
+		(property "Reference" "D1"
+			(at 70 45 0)
+			(effects (font (size 1.27 1.27)))
+		)
+		(property "Value" "SMBJ18CA"
+			(at 70 52 0)
+			(effects (font (size 1.27 1.27)))
+		)
+	)
+
+	;; Reverse polarity protection
+	(symbol
+		(lib_id "Device:D_Schottky")
+		(at 85 50 0)
+		(unit 1)
+		(uuid "d-reverse")
+		(property "Reference" "D2"
+			(at 85 45 0)
+			(effects (font (size 1.27 1.27)))
+		)
+		(property "Value" "SS34"
+			(at 85 52 0)
+			(effects (font (size 1.27 1.27)))
+		)
+	)
+
+	;; DC-DC Converter
+	(symbol
+		(lib_id "Regulator_Switching:TPS62827")
+		(at 120 55 0)
+		(unit 1)
+		(uuid "u5-dcdc")
+		(property "Reference" "U5"
+			(at 120 40 0)
+			(effects (font (size 1.27 1.27)))
+		)
+		(property "Value" "TPS62827DLCR"
+			(at 120 42 0)
+			(effects (font (size 1.27 1.27)))
+		)
+		(property "Description" "2A Step-Down Converter, 3-17V input, adjustable output"
+			(at 120 55 0)
+			(effects (font (size 1.27 1.27)) hide)
+		)
+	)
+
+	;; ============================================
+	;; ESP32-P4 MODULE
+	;; ============================================
+
+	(text "=== ESP32-P4 MODULE ===" (at 25 90 0)
+		(effects (font (size 2 2) (thickness 0.3)) (justify left))
+	)
+
+	(symbol
+		(lib_id "RF_Module:ESP32-P4-WROOM-01")
+		(at 180 140 0)
+		(unit 1)
+		(uuid "u1-esp32p4")
+		(property "Reference" "U1"
+			(at 180 95 0)
+			(effects (font (size 1.27 1.27)))
+		)
+		(property "Value" "ESP32-P4-WROOM-01"
+			(at 180 97 0)
+			(effects (font (size 1.27 1.27)))
+		)
+		(property "Footprint" "RF_Module:ESP32-P4-WROOM-01"
+			(at 180 140 0)
+			(effects (font (size 1.27 1.27)) hide)
+		)
+		(property "Description" "ESP32-P4 WiFi+BT module with MIPI CSI/DSI"
+			(at 180 140 0)
+			(effects (font (size 1.27 1.27)) hide)
+		)
+	)
+
+	;; ============================================
+	;; CAN TRANSCEIVERS
+	;; ============================================
+
+	(text "=== CAN BUS (2x TJA1051) ===" (at 25 200 0)
+		(effects (font (size 2 2) (thickness 0.3)) (justify left))
+	)
+
+	;; CAN1 Transceiver
+	(symbol
+		(lib_id "Interface_CAN_LIN:TJA1051T-3")
+		(at 70 230 0)
+		(unit 1)
+		(uuid "u2-can1")
+		(property "Reference" "U2"
+			(at 70 215 0)
+			(effects (font (size 1.27 1.27)))
+		)
+		(property "Value" "TJA1051T/3"
+			(at 70 217 0)
+			(effects (font (size 1.27 1.27)))
+		)
+		(property "Description" "CAN Transceiver 3.3V, Automotive"
+			(at 70 230 0)
+			(effects (font (size 1.27 1.27)) hide)
+		)
+	)
+
+	;; CAN1 ESD Protection
+	(symbol
+		(lib_id "Device:D_TVS_x2_AAC")
+		(at 95 230 0)
+		(unit 1)
+		(uuid "d3-can1-esd")
+		(property "Reference" "D3"
+			(at 95 222 0)
+			(effects (font (size 1.27 1.27)))
+		)
+		(property "Value" "PESD2CAN"
+			(at 95 225 0)
+			(effects (font (size 1.27 1.27)))
+		)
+	)
+
+	;; CAN2 Transceiver
+	(symbol
+		(lib_id "Interface_CAN_LIN:TJA1051T-3")
+		(at 70 280 0)
+		(unit 1)
+		(uuid "u3-can2")
+		(property "Reference" "U3"
+			(at 70 265 0)
+			(effects (font (size 1.27 1.27)))
+		)
+		(property "Value" "TJA1051T/3"
+			(at 70 267 0)
+			(effects (font (size 1.27 1.27)))
+		)
+		(property "Description" "CAN Transceiver 3.3V, Automotive"
+			(at 70 280 0)
+			(effects (font (size 1.27 1.27)) hide)
+		)
+	)
+
+	;; CAN2 ESD Protection
+	(symbol
+		(lib_id "Device:D_TVS_x2_AAC")
+		(at 95 280 0)
+		(unit 1)
+		(uuid "d4-can2-esd")
+		(property "Reference" "D4"
+			(at 95 272 0)
+			(effects (font (size 1.27 1.27)))
+		)
+		(property "Value" "PESD2CAN"
+			(at 95 275 0)
+			(effects (font (size 1.27 1.27)))
+		)
+	)
+
+	;; ============================================
+	;; IBUS (TH3122)
+	;; ============================================
+
+	(text "=== BMW IBUS (TH3122) ===" (at 150 200 0)
+		(effects (font (size 2 2) (thickness 0.3)) (justify left))
+	)
+
+	(symbol
+		(lib_id "Interface_UART:TH3122")
+		(at 180 230 0)
+		(unit 1)
+		(uuid "u4-ibus")
+		(property "Reference" "U4"
+			(at 180 215 0)
+			(effects (font (size 1.27 1.27)))
+		)
+		(property "Value" "TH3122"
+			(at 180 217 0)
+			(effects (font (size 1.27 1.27)))
+		)
+		(property "Description" "BMW IBUS Transceiver"
+			(at 180 230 0)
+			(effects (font (size 1.27 1.27)) hide)
+		)
+	)
+
+	;; ============================================
+	;; USB-C (Programming/Debug)
+	;; ============================================
+
+	(text "=== USB-C (Programming & Debug) ===" (at 250 30 0)
+		(effects (font (size 2 2) (thickness 0.3)) (justify left))
+	)
+
+	(symbol
+		(lib_id "Connector:USB_C_Receptacle_USB2.0")
+		(at 280 70 0)
+		(unit 1)
+		(uuid "j1-usbc")
+		(property "Reference" "J1"
+			(at 280 45 0)
+			(effects (font (size 1.27 1.27)))
+		)
+		(property "Value" "USB4110-GF-A"
+			(at 280 47 0)
+			(effects (font (size 1.27 1.27)))
+		)
+		(property "Footprint" "Connector_USB:USB_C_Receptacle_GCT_USB4110"
+			(at 280 70 0)
+			(effects (font (size 1.27 1.27)) hide)
+		)
+	)
+
+	;; USB ESD Protection
+	(symbol
+		(lib_id "Power_Protection:USBLC6-2SC6Y")
+		(at 320 70 0)
+		(unit 1)
+		(uuid "u6-usb-esd")
+		(property "Reference" "U6"
+			(at 320 55 0)
+			(effects (font (size 1.27 1.27)))
+		)
+		(property "Value" "USBLC6-2SC6Y"
+			(at 320 57 0)
+			(effects (font (size 1.27 1.27)))
+		)
+	)
+
+	;; ============================================
+	;; MIPI CSI (Camera)
+	;; ============================================
+
+	(text "=== MIPI CSI (Camera Connector) ===" (at 250 120 0)
+		(effects (font (size 2 2) (thickness 0.3)) (justify left))
+	)
+
+	(symbol
+		(lib_id "Connector:Conn_01x15_Pin")
+		(at 280 160 0)
+		(unit 1)
+		(uuid "j2-csi")
+		(property "Reference" "J2"
+			(at 280 135 0)
+			(effects (font (size 1.27 1.27)))
+		)
+		(property "Value" "FPC-15-0.5mm-CSI"
+			(at 280 137 0)
+			(effects (font (size 1.27 1.27)))
+		)
+		(property "Description" "MIPI CSI Camera connector, 15-pin 0.5mm FPC"
+			(at 280 160 0)
+			(effects (font (size 1.27 1.27)) hide)
+		)
+	)
+
+	;; ============================================
+	;; MIPI DSI (Display)
+	;; ============================================
+
+	(text "=== MIPI DSI (Display Connector) ===" (at 250 200 0)
+		(effects (font (size 2 2) (thickness 0.3)) (justify left))
+	)
+
+	(symbol
+		(lib_id "Connector:Conn_01x22_Pin")
+		(at 280 250 0)
+		(unit 1)
+		(uuid "j3-dsi")
+		(property "Reference" "J3"
+			(at 280 215 0)
+			(effects (font (size 1.27 1.27)))
+		)
+		(property "Value" "FPC-22-0.5mm-DSI"
+			(at 280 217 0)
+			(effects (font (size 1.27 1.27)))
+		)
+		(property "Description" "MIPI DSI Display connector, 22-pin 0.5mm FPC"
+			(at 280 250 0)
+			(effects (font (size 1.27 1.27)) hide)
+		)
+	)
+
+	;; ============================================
+	;; POWER FLAGS & GROUND
+	;; ============================================
+
+	(symbol
+		(lib_id "power:+3V3")
+		(at 150 55 0)
+		(unit 1)
+		(uuid "pwr-3v3")
+		(property "Reference" "#PWR01"
+			(at 150 59 0)
+			(effects (font (size 1.27 1.27)) hide)
+		)
+		(property "Value" "+3V3"
+			(at 150 51 0)
+			(effects (font (size 1.27 1.27)))
+		)
+	)
+
+	(symbol
+		(lib_id "power:+12V")
+		(at 50 45 0)
+		(unit 1)
+		(uuid "pwr-12v")
+		(property "Reference" "#PWR02"
+			(at 50 49 0)
+			(effects (font (size 1.27 1.27)) hide)
+		)
+		(property "Value" "+12V"
+			(at 50 41 0)
+			(effects (font (size 1.27 1.27)))
+		)
+	)
+
+	(symbol
+		(lib_id "power:GND")
+		(at 100 300 0)
+		(unit 1)
+		(uuid "gnd1")
+		(property "Reference" "#PWR03"
+			(at 100 306 0)
+			(effects (font (size 1.27 1.27)) hide)
+		)
+		(property "Value" "GND"
+			(at 100 304 0)
+			(effects (font (size 1.27 1.27)))
+		)
+	)
+)

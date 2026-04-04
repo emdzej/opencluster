@@ -1,0 +1,91 @@
+{
+  "board": {
+    "3dviewports": [],
+    "design_settings": {
+      "defaults": {
+        "board_outline_line_width": 0.1,
+        "copper_line_width": 0.2,
+        "copper_text_size_h": 1.5,
+        "copper_text_size_v": 1.5,
+        "copper_text_thickness": 0.3,
+        "other_line_width": 0.15,
+        "silk_line_width": 0.15,
+        "silk_text_size_h": 1.0,
+        "silk_text_size_v": 1.0,
+        "silk_text_thickness": 0.15
+      },
+      "diff_pair_dimensions": [
+        {
+          "gap": 0.15,
+          "via_gap": 0.25,
+          "width": 0.15
+        }
+      ],
+      "drc_exclusions": [],
+      "rules": {
+        "min_clearance": 0.15,
+        "min_track_width": 0.15,
+        "min_via_annular_width": 0.15,
+        "min_via_diameter": 0.5
+      },
+      "track_widths": [
+        0.2,
+        0.25,
+        0.3,
+        0.5,
+        0.75,
+        1.0
+      ],
+      "via_dimensions": [
+        {
+          "diameter": 0.6,
+          "drill": 0.3
+        }
+      ]
+    },
+    "layer_presets": [],
+    "viewports": []
+  },
+  "meta": {
+    "filename": "esp32p4-automotive.kicad_pro",
+    "version": 1
+  },
+  "net_settings": {
+    "classes": [
+      {
+        "clearance": 0.2,
+        "diff_pair_gap": 0.15,
+        "diff_pair_width": 0.15,
+        "name": "Default",
+        "track_width": 0.25,
+        "via_diameter": 0.6,
+        "via_drill": 0.3
+      },
+      {
+        "clearance": 0.2,
+        "diff_pair_gap": 0.15,
+        "diff_pair_width": 0.15,
+        "name": "MIPI",
+        "track_width": 0.15,
+        "via_diameter": 0.6,
+        "via_drill": 0.3
+      },
+      {
+        "clearance": 0.3,
+        "name": "Power",
+        "track_width": 0.5,
+        "via_diameter": 0.8,
+        "via_drill": 0.4
+      }
+    ]
+  },
+  "schematic": {
+    "drawing": {
+      "default_line_thickness": 6.0,
+      "pin_symbol_size": 0.0,
+      "text_offset_ratio": 0.08
+    },
+    "page_layout_descr_file": ""
+  },
+  "sheets": []
+}

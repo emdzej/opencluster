@@ -1,0 +1,278 @@
+(kicad_pcb
+	(version 20240108)
+	(generator "pcbnew")
+	(generator_version "8.0")
+	(general
+		(thickness 1.6)
+		(legacy_teardrops no)
+	)
+	(paper "A4")
+	(title_block
+		(title "ESP32-P4 Automotive Display Controller")
+		(date "2026-04-04")
+		(rev "0.1")
+		(company "emdzej")
+	)
+	(layers
+		(0 "F.Cu" signal)
+		(31 "B.Cu" signal)
+		(32 "B.Adhes" user "B.Adhesive")
+		(33 "F.Adhes" user "F.Adhesive")
+		(34 "B.Paste" user)
+		(35 "F.Paste" user)
+		(36 "B.SilkS" user "B.Silkscreen")
+		(37 "F.SilkS" user "F.Silkscreen")
+		(38 "B.Mask" user)
+		(39 "F.Mask" user)
+		(40 "Dwgs.User" user "User.Drawings")
+		(41 "Cmts.User" user "User.Comments")
+		(42 "Eco1.User" user "User.Eco1")
+		(43 "Eco2.User" user "User.Eco2")
+		(44 "Edge.Cuts" user)
+		(45 "Margin" user)
+		(46 "B.CrtYd" user "B.Courtyard")
+		(47 "F.CrtYd" user "F.Courtyard")
+		(48 "B.Fab" user)
+		(49 "F.Fab" user)
+	)
+	(setup
+		(pad_to_mask_clearance 0)
+		(allow_soldermask_bridges_in_footprints no)
+		(pcbplotparams
+			(layerselection 0x00010fc_ffffffff)
+			(plot_on_all_layers_selection 0x0000000_00000000)
+			(disableapertmacros no)
+			(usegerberextensions no)
+			(usegerberattributes yes)
+			(usegerberadvancedattributes yes)
+			(creategerberjobfile yes)
+			(svguseinch no)
+			(svgprecision 4)
+			(excludeedgelayer yes)
+			(plotframeref no)
+			(viasonmask no)
+			(mode 1)
+			(useauxorigin no)
+			(hpglpennumber 1)
+			(hpglpenspeed 20)
+			(hpglpendiameter 15.000000)
+			(pdf_front_fp_property_popups yes)
+			(pdf_back_fp_property_popups yes)
+			(dxfpolygonmode yes)
+			(dxfimperialunits yes)
+			(dxfusepcbnewfont yes)
+			(psnegative no)
+			(psa4output no)
+			(plotreference yes)
+			(plotvalue yes)
+			(plotfptext yes)
+			(plotinvisibletext no)
+			(sketchpadsonfab no)
+			(subtractmaskfromsilk no)
+			(outputformat 1)
+			(mirror no)
+			(drillshape 1)
+			(scaleselection 1)
+			(outputdirectory "")
+		)
+	)
+	(net 0 "")
+	(net 1 "GND")
+	(net 2 "+3V3")
+	(net 3 "+12V")
+	(net 4 "CAN1_H")
+	(net 5 "CAN1_L")
+	(net 6 "CAN2_H")
+	(net 7 "CAN2_L")
+	(net 8 "IBUS")
+	(net 9 "USB_D+")
+	(net 10 "USB_D-")
+	(net 11 "VBUS")
+	(net 12 "CSI_CLK_P")
+	(net 13 "CSI_CLK_N")
+	(net 14 "CSI_D0_P")
+	(net 15 "CSI_D0_N")
+	(net 16 "CSI_D1_P")
+	(net 17 "CSI_D1_N")
+	(net 18 "DSI_CLK_P")
+	(net 19 "DSI_CLK_N")
+	(net 20 "DSI_D0_P")
+	(net 21 "DSI_D0_N")
+	(net 22 "DSI_D1_P")
+	(net 23 "DSI_D1_N")
+	(net 24 "TWAI0_TX")
+	(net 25 "TWAI0_RX")
+	(net 26 "TWAI1_TX")
+	(net 27 "TWAI1_RX")
+	(net 28 "IBUS_TX")
+	(net 29 "IBUS_RX")
+
+	;; Board outline - 80mm circle
+	(gr_circle
+		(center 100 100)
+		(end 140 100)
+		(stroke
+			(width 0.15)
+			(type solid)
+		)
+		(fill none)
+		(layer "Edge.Cuts")
+		(uuid "board-outline")
+	)
+
+	;; Mounting holes - M2.5
+	(footprint "MountingHole:MountingHole_2.7mm_M2.5"
+		(layer "F.Cu")
+		(uuid "mh1")
+		(at 70 65)
+		(property "Reference" "MH1"
+			(at 0 -3 0)
+			(layer "F.SilkS")
+			(effects (font (size 1 1) (thickness 0.15)))
+		)
+	)
+	(footprint "MountingHole:MountingHole_2.7mm_M2.5"
+		(layer "F.Cu")
+		(uuid "mh2")
+		(at 130 65)
+		(property "Reference" "MH2"
+			(at 0 -3 0)
+			(layer "F.SilkS")
+			(effects (font (size 1 1) (thickness 0.15)))
+		)
+	)
+	(footprint "MountingHole:MountingHole_2.7mm_M2.5"
+		(layer "F.Cu")
+		(uuid "mh3")
+		(at 70 135)
+		(property "Reference" "MH3"
+			(at 0 -3 0)
+			(layer "F.SilkS")
+			(effects (font (size 1 1) (thickness 0.15)))
+		)
+	)
+	(footprint "MountingHole:MountingHole_2.7mm_M2.5"
+		(layer "F.Cu")
+		(uuid "mh4")
+		(at 130 135)
+		(property "Reference" "MH4"
+			(at 0 -3 0)
+			(layer "F.SilkS")
+			(effects (font (size 1 1) (thickness 0.15)))
+		)
+	)
+
+	;; Component placement guides (as text on Fab layer)
+	(gr_text "ESP32-P4\nMODULE\n18x20mm"
+		(at 100 100 0)
+		(layer "F.Fab")
+		(uuid "txt-esp32")
+		(effects
+			(font (size 2 2) (thickness 0.3))
+			(justify center)
+		)
+	)
+
+	(gr_text "USB-C"
+		(at 100 55 0)
+		(layer "F.Fab")
+		(uuid "txt-usbc")
+		(effects
+			(font (size 1.5 1.5) (thickness 0.2))
+			(justify center)
+		)
+	)
+
+	(gr_text "FPC CSI\n15-pin"
+		(at 145 90 0)
+		(layer "F.Fab")
+		(uuid "txt-csi")
+		(effects
+			(font (size 1.2 1.2) (thickness 0.15))
+			(justify center)
+		)
+	)
+
+	(gr_text "FPC DSI\n22-pin"
+		(at 100 145 0)
+		(layer "F.Fab")
+		(uuid "txt-dsi")
+		(effects
+			(font (size 1.2 1.2) (thickness 0.15))
+			(justify center)
+		)
+	)
+
+	(gr_text "CAN1"
+		(at 60 115 0)
+		(layer "F.Fab")
+		(uuid "txt-can1")
+		(effects
+			(font (size 1.2 1.2) (thickness 0.15))
+			(justify center)
+		)
+	)
+
+	(gr_text "CAN2"
+		(at 60 130 0)
+		(layer "F.Fab")
+		(uuid "txt-can2")
+		(effects
+			(font (size 1.2 1.2) (thickness 0.15))
+			(justify center)
+		)
+	)
+
+	(gr_text "IBUS\nTH3122"
+		(at 140 125 0)
+		(layer "F.Fab")
+		(uuid "txt-ibus")
+		(effects
+			(font (size 1.2 1.2) (thickness 0.15))
+			(justify center)
+		)
+	)
+
+	(gr_text "DC-DC"
+		(at 75 75 0)
+		(layer "F.Fab")
+		(uuid "txt-dcdc")
+		(effects
+			(font (size 1.2 1.2) (thickness 0.15))
+			(justify center)
+		)
+	)
+
+	(gr_text "JST-8\nAUTO"
+		(at 100 135 90)
+		(layer "F.Fab")
+		(uuid "txt-jst")
+		(effects
+			(font (size 1 1) (thickness 0.15))
+			(justify center)
+		)
+	)
+
+	;; GND pour on bottom layer
+	(zone
+		(net 1)
+		(net_name "GND")
+		(layer "B.Cu")
+		(uuid "gnd-pour")
+		(hatch edge 0.5)
+		(connect_pads
+			(clearance 0.3)
+		)
+		(min_thickness 0.2)
+		(filled_areas_thickness no)
+		(fill yes
+			(thermal_gap 0.3)
+			(thermal_bridge_width 0.4)
+		)
+		(polygon
+			(pts
+				(xy 60 60) (xy 140 60) (xy 140 140) (xy 60 140)
+			)
+		)
+	)
+)
