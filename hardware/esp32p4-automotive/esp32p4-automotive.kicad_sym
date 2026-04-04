@@ -8,46 +8,46 @@
 		(in_bom yes)
 		(on_board yes)
 		(property "Reference" "U"
-			(at 0 8.89 0)
+			(at 0 12.7 0)
 			(effects
 				(font (size 1.27 1.27))
 			)
 		)
 		(property "Value" "TH3122"
-			(at 0 6.35 0)
+			(at 0 10.16 0)
 			(effects
 				(font (size 1.27 1.27))
 			)
 		)
-		(property "Footprint" "Package_SO:SOIC-8_3.9x4.9mm_P1.27mm"
-			(at 0 -15.24 0)
+		(property "Footprint" "Package_SO:SOIC-16_3.9x9.9mm_P1.27mm"
+			(at 0 -22.86 0)
 			(effects
 				(font (size 1.27 1.27))
 				hide
 			)
 		)
 		(property "Datasheet" "https://www.melexis.com/en/documents/documentation/datasheets/datasheet-th3122"
-			(at 0 -17.78 0)
+			(at 0 -25.4 0)
 			(effects
 				(font (size 1.27 1.27))
 				hide
 			)
 		)
-		(property "Description" "BMW IBUS Transceiver, Single-Wire Bus, 9600 baud"
-			(at 0 -20.32 0)
+		(property "Description" "BMW K-Bus/IBUS Transceiver with integrated 5V regulator, 16-SOIC"
+			(at 0 -27.94 0)
 			(effects
 				(font (size 1.27 1.27))
 				hide
 			)
 		)
-		(property "ki_keywords" "IBUS BMW transceiver single-wire automotive"
+		(property "ki_keywords" "IBUS K-Bus BMW transceiver single-wire automotive ISO9141"
 			(at 0 0 0)
 			(effects
 				(font (size 1.27 1.27))
 				hide
 			)
 		)
-		(property "ki_fp_filters" "SOIC*3.9x4.9mm*P1.27mm*"
+		(property "ki_fp_filters" "SOIC*3.9x9.9mm*P1.27mm*"
 			(at 0 0 0)
 			(effects
 				(font (size 1.27 1.27))
@@ -58,100 +58,193 @@
 		(symbol "TH3122_0_1"
 			;; Body rectangle
 			(rectangle
-				(start -6.35 5.08)
-				(end 6.35 -5.08)
+				(start -8.89 8.89)
+				(end 8.89 -8.89)
 				(stroke (width 0.254) (type default))
 				(fill (type background))
 			)
 		)
 
 		(symbol "TH3122_1_1"
-			;; Pin 1: VS (Supply 8-18V)
+			;; === LEFT SIDE (Pin 1-8, top to bottom) ===
+			
+			;; Pin 1: VS (Battery supply 5.5-16V)
 			(pin power_in line
-				(at -8.89 3.81 0)
+				(at -11.43 7.62 0)
 				(length 2.54)
 				(name "VS"
-					(effects (font (size 1.27 1.27)))
+					(effects (font (size 1.016 1.016)))
 				)
 				(number "1"
-					(effects (font (size 1.27 1.27)))
+					(effects (font (size 1.016 1.016)))
 				)
 			)
-			;; Pin 2: WAKE (Wake output)
+			;; Pin 2: WAKE (Wake-up output to MCU)
 			(pin output line
-				(at -8.89 1.27 0)
+				(at -11.43 5.08 0)
 				(length 2.54)
 				(name "WAKE"
-					(effects (font (size 1.27 1.27)))
+					(effects (font (size 1.016 1.016)))
 				)
 				(number "2"
-					(effects (font (size 1.27 1.27)))
+					(effects (font (size 1.016 1.016)))
 				)
 			)
-			;; Pin 3: GND
-			(pin power_in line
-				(at -8.89 -1.27 0)
+			;; Pin 3: INH (Inhibit output for ext. regulator)
+			(pin output line
+				(at -11.43 2.54 0)
 				(length 2.54)
-				(name "GND"
-					(effects (font (size 1.27 1.27)))
+				(name "INH"
+					(effects (font (size 1.016 1.016)))
 				)
 				(number "3"
-					(effects (font (size 1.27 1.27)))
+					(effects (font (size 1.016 1.016)))
 				)
 			)
-			;; Pin 4: TXD (Transmit Data from MCU)
-			(pin input line
-				(at -8.89 -3.81 0)
+			;; Pin 4: VCC (5V regulator output)
+			(pin power_out line
+				(at -11.43 0 0)
 				(length 2.54)
-				(name "TXD"
-					(effects (font (size 1.27 1.27)))
+				(name "VCC"
+					(effects (font (size 1.016 1.016)))
 				)
 				(number "4"
-					(effects (font (size 1.27 1.27)))
+					(effects (font (size 1.016 1.016)))
 				)
 			)
-			;; Pin 5: SLP (Sleep control, active low)
-			(pin input line
-				(at 8.89 -3.81 180)
+			;; Pin 5: GND
+			(pin power_in line
+				(at -11.43 -2.54 0)
 				(length 2.54)
-				(name "~{SLP}"
-					(effects (font (size 1.27 1.27)))
+				(name "GND"
+					(effects (font (size 1.016 1.016)))
 				)
 				(number "5"
-					(effects (font (size 1.27 1.27)))
+					(effects (font (size 1.016 1.016)))
 				)
 			)
-			;; Pin 6: RXD (Receive Data to MCU)
-			(pin output line
-				(at 8.89 -1.27 180)
+			;; Pin 6: TxD (Transmit data from MCU)
+			(pin input line
+				(at -11.43 -5.08 0)
 				(length 2.54)
-				(name "RXD"
-					(effects (font (size 1.27 1.27)))
+				(name "TXD"
+					(effects (font (size 1.016 1.016)))
 				)
 				(number "6"
-					(effects (font (size 1.27 1.27)))
+					(effects (font (size 1.016 1.016)))
 				)
 			)
-			;; Pin 7: SENS (Current sense output)
-			(pin output line
-				(at 8.89 1.27 180)
+			;; Pin 7: NC (or test)
+			(pin passive line
+				(at -11.43 -7.62 0)
 				(length 2.54)
-				(name "SENS"
-					(effects (font (size 1.27 1.27)))
+				(name "NC"
+					(effects (font (size 1.016 1.016)))
 				)
 				(number "7"
-					(effects (font (size 1.27 1.27)))
+					(effects (font (size 1.016 1.016)))
 				)
 			)
-			;; Pin 8: BUS (IBUS line)
-			(pin bidirectional line
-				(at 8.89 3.81 180)
+			;; Pin 8: GND
+			(pin power_in line
+				(at -11.43 -10.16 0)
 				(length 2.54)
-				(name "BUS"
-					(effects (font (size 1.27 1.27)))
+				(name "GND"
+					(effects (font (size 1.016 1.016)))
 				)
 				(number "8"
-					(effects (font (size 1.27 1.27)))
+					(effects (font (size 1.016 1.016)))
+				)
+			)
+
+			;; === RIGHT SIDE (Pin 16-9, top to bottom) ===
+			
+			;; Pin 16: BUS (K-Bus/IBUS line)
+			(pin bidirectional line
+				(at 11.43 7.62 180)
+				(length 2.54)
+				(name "BUS"
+					(effects (font (size 1.016 1.016)))
+				)
+				(number "16"
+					(effects (font (size 1.016 1.016)))
+				)
+			)
+			;; Pin 15: SENS (Current sense)
+			(pin output line
+				(at 11.43 5.08 180)
+				(length 2.54)
+				(name "SENS"
+					(effects (font (size 1.016 1.016)))
+				)
+				(number "15"
+					(effects (font (size 1.016 1.016)))
+				)
+			)
+			;; Pin 14: RxD (Receive data to MCU)
+			(pin output line
+				(at 11.43 2.54 180)
+				(length 2.54)
+				(name "RXD"
+					(effects (font (size 1.016 1.016)))
+				)
+				(number "14"
+					(effects (font (size 1.016 1.016)))
+				)
+			)
+			;; Pin 13: nSLP (Sleep control, active low)
+			(pin input line
+				(at 11.43 0 180)
+				(length 2.54)
+				(name "~{SLP}"
+					(effects (font (size 1.016 1.016)))
+				)
+				(number "13"
+					(effects (font (size 1.016 1.016)))
+				)
+			)
+			;; Pin 12: nRST (Reset input, active low)
+			(pin input line
+				(at 11.43 -2.54 180)
+				(length 2.54)
+				(name "~{RST}"
+					(effects (font (size 1.016 1.016)))
+				)
+				(number "12"
+					(effects (font (size 1.016 1.016)))
+				)
+			)
+			;; Pin 11: NC
+			(pin passive line
+				(at 11.43 -5.08 180)
+				(length 2.54)
+				(name "NC"
+					(effects (font (size 1.016 1.016)))
+				)
+				(number "11"
+					(effects (font (size 1.016 1.016)))
+				)
+			)
+			;; Pin 10: NC
+			(pin passive line
+				(at 11.43 -7.62 180)
+				(length 2.54)
+				(name "NC"
+					(effects (font (size 1.016 1.016)))
+				)
+				(number "10"
+					(effects (font (size 1.016 1.016)))
+				)
+			)
+			;; Pin 9: GND
+			(pin power_in line
+				(at 11.43 -10.16 180)
+				(length 2.54)
+				(name "GND"
+					(effects (font (size 1.016 1.016)))
+				)
+				(number "9"
+					(effects (font (size 1.016 1.016)))
 				)
 			)
 		)
