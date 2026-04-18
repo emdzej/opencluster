@@ -18,6 +18,7 @@
 #include "hal_platform.h"
 #include "vehicle_data.h"
 #include "can_protocol.h"
+#include "e46_can_protocol.h"
 
 static volatile bool s_running = true;
 
@@ -166,19 +167,172 @@ static void sim_to_vehicle_data(const sim_state_t *sim, vehicle_data_t *vd)
     }
 }
 
-int main(int argc, char **argv)
+/* ---- E46 simulation helpers ---- */
+
+static void sim_to_e46_dme1(const sim_state_t *sim, e46_dme1_t *d)
 {
-    (void)argc;
-    (void)argv;
+    memset(d, 0, sizeof(*d));
+    d->ignition_on          = true;
+    d->crankshaft_error     = false;
+    d->traction_ack         = true;
+    d->gear_change_ok       = true;
+    d->charge_state         = E46_CHARGE_OK;
+    d->maf_error            = false;
+    d->torque_request_pct   = sim->throttle * 0.8f;
+    d->engine_rpm           = sim->rpm;
+    d->torque_indicated_pct = sim->throttle * 0.75f;
+    d->torque_loss_pct      = 15.0f + sim->rpm * 0.001f;
+    d->torque_after_charge_pct = sim->throttle * 0.7f;
+}
 
-    signal(SIGINT, signal_handler);
-    signal(SIGTERM, signal_handler);
+static void sim_to_e46_dme2(const sim_state_t *sim, e46_dme2_t *d)
+{
+    memset(d, 0, sizeof(*d));
+    d->mux_code             = E46_MUX_CAN_LEVEL;
+    d->mux_info             = 0x11;
+    d->coolant_temp_c       = sim->coolant_temp;
+    d->ambient_pressure_hpa = 1013;
+    d->engine_running       = (sim->rpm > 400.0f);
+    d->accelerator_pct      = sim->throttle;
+    d->tps_virtual_pct      = sim->throttle;
+    d->cruise_switch        = E46_CRU_SW_NONE;
+    d->cruise_state         = E46_CRU_INACTIVE;
+}
 
-    if (hal_can_init() != 0) {
-        fprintf(stderr, "Failed to initialize CAN transport\n");
-        return 1;
+static void sim_to_e46_dme4(const sim_state_t *sim, e46_dme4_t *d)
+{
+    memset(d, 0, sizeof(*d));
+    d->check_engine         = false;
+    d->eml_light            = false;
+    d->fuel_cap_light       = false;
+    d->fuel_consumption_raw = (uint16_t)(sim->fuel_consumption * 10.0f);
+    d->oil_temp_c           = (int16_t)(sim->coolant_temp - 5.0f);
+    d->coolant_overheat     = (sim->coolant_temp > 120.0f);
+    d->warmup_leds          = (sim->coolant_temp < 60.0f) ? 7 :
+                              (sim->coolant_temp < 80.0f) ? 3 : 0;
+    d->oil_level_l          = 0.0f;
+    d->oil_pressure_low     = false;
+}
+
+static void sim_to_e46_asc1(const sim_state_t *sim, e46_asc1_t *d, uint8_t *alive)
+{
+    memset(d, 0, sizeof(*d));
+    d->vehicle_speed_kmh            = sim->speed;
+    d->torque_intervention_asc_pct  = 99.6f;  /* no reduction */
+    d->torque_intervention_msr_pct  = 0.0f;   /* no increase */
+    d->torque_intervention_asc_lm_pct = 99.6f;
+    d->brake_light_switch           = false;
+    d->alive_counter                = (*alive) & 0x0F;
+    (*alive)++;
+}
+
+static void sim_to_e46_icl2(const sim_state_t *sim, e46_icl2_t *d, uint16_t *clock_min)
+{
+    memset(d, 0, sizeof(*d));
+    d->odometer_km       = 42000;
+    d->fuel_tank_level   = (uint8_t)sim->fuel_level;
+    d->fuel_reserve      = (sim->fuel_level < 15.0f);
+    d->running_clock_min = *clock_min;
+    d->fuel_level_driver = (uint8_t)(sim->fuel_level * 0.6f);
+}
+
+static int run_e46_simulator(void)
+{
+    printf("OpenCluster E46 CAN simulator started (BMW 500kb/s bus)\n");
+    printf("  Sending: DME1(0x316) DME2(0x329) DME4(0x545) ASC1(0x153) ICL2(0x613)\n");
+    printf("  Press Ctrl+C to stop\n\n");
+
+    sim_state_t sim;
+    sim_init(&sim);
+    can_frame_t frame;
+
+    uint32_t last_dme1_ms = 0;   /* 10ms */
+    uint32_t last_dme2_ms = 0;   /* 10ms */
+    uint32_t last_dme4_ms = 0;   /* 10ms */
+    uint32_t last_asc1_ms = 0;   /* 10ms */
+    uint32_t last_icl2_ms = 0;   /* 200ms */
+    uint32_t last_print_ms = 0;
+    uint32_t start_ms = hal_tick_ms();
+
+    uint8_t  asc_alive = 0;
+    uint16_t clock_min = 0;
+
+    while (s_running) {
+        uint32_t now = hal_tick_ms();
+        float dt = 0.010f;  /* 10ms step to match E46 bus timing */
+
+        sim_step(&sim, dt);
+
+        /* DME1 0x316 at 100Hz (10ms) */
+        if (now - last_dme1_ms >= 10) {
+            e46_dme1_t dme1;
+            sim_to_e46_dme1(&sim, &dme1);
+            e46_encode_dme1(&dme1, &frame);
+            hal_can_send(&frame);
+            last_dme1_ms = now;
+        }
+
+        /* DME2 0x329 at 100Hz (10ms) */
+        if (now - last_dme2_ms >= 10) {
+            e46_dme2_t dme2;
+            sim_to_e46_dme2(&sim, &dme2);
+            e46_encode_dme2(&dme2, &frame);
+            hal_can_send(&frame);
+            last_dme2_ms = now;
+        }
+
+        /* DME4 0x545 at 100Hz (10ms) */
+        if (now - last_dme4_ms >= 10) {
+            e46_dme4_t dme4;
+            sim_to_e46_dme4(&sim, &dme4);
+            e46_encode_dme4(&dme4, &frame);
+            hal_can_send(&frame);
+            last_dme4_ms = now;
+        }
+
+        /* ASC1 0x153 at 100Hz (10ms) */
+        if (now - last_asc1_ms >= 10) {
+            e46_asc1_t asc1;
+            sim_to_e46_asc1(&sim, &asc1, &asc_alive);
+            e46_encode_asc1(&asc1, &frame);
+            hal_can_send(&frame);
+            last_asc1_ms = now;
+        }
+
+        /* ICL2 0x613 at 5Hz (200ms) */
+        if (now - last_icl2_ms >= 200) {
+            e46_icl2_t icl2;
+            sim_to_e46_icl2(&sim, &icl2, &clock_min);
+            e46_encode_icl2(&icl2, &frame);
+            hal_can_send(&frame);
+            last_icl2_ms = now;
+            /* Advance running clock every 60 * 200ms = 12s of sim time */
+            if (((now - start_ms) / 60000) > clock_min)
+                clock_min = (uint16_t)((now - start_ms) / 60000);
+        }
+
+        /* Print status every 2 seconds */
+        if (now - last_print_ms >= 2000) {
+            float elapsed = (float)(now - start_ms) / 1000.0f;
+            printf("[%6.1fs] RPM: %5.0f | Speed: %5.1f km/h | "
+                   "Temp: %4.1f C | Throttle: %4.1f%% | Fuel: %4.1f%%\n",
+                   elapsed,
+                   sim.rpm,
+                   sim.speed,
+                   sim.coolant_temp,
+                   sim.throttle,
+                   sim.fuel_level);
+            last_print_ms = now;
+        }
+
+        hal_delay_ms(10);
     }
 
+    return 0;
+}
+
+static int run_default_simulator(void)
+{
     printf("OpenCluster CAN simulator started\n");
     printf("  Broadcasting on UDP multicast 224.0.0.100:4200\n");
     printf("  Press Ctrl+C to stop\n\n");
@@ -198,26 +352,23 @@ int main(int argc, char **argv)
 
     while (s_running) {
         uint32_t now = hal_tick_ms();
-        float dt = 0.020f;  /* 20ms step */
+        float dt = 0.020f;
 
         sim_step(&sim, dt);
         sim_to_vehicle_data(&sim, &vd);
 
-        /* Broadcast engine data at 20 Hz (50ms) */
         if (now - last_engine_ms >= 50) {
             can_encode_engine(&vd, &frame);
             hal_can_send(&frame);
             last_engine_ms = now;
         }
 
-        /* Broadcast drivetrain data at 20 Hz (50ms) */
         if (now - last_drive_ms >= 50) {
             can_encode_drivetrain(&vd, &frame);
             hal_can_send(&frame);
             last_drive_ms = now;
         }
 
-        /* Broadcast fuel/electrical at 5 Hz (200ms) */
         if (now - last_fuel_ms >= 200) {
             can_encode_fuel_elec(&vd, &frame);
             hal_can_send(&frame);
@@ -228,7 +379,6 @@ int main(int argc, char **argv)
             last_fuel_ms = now;
         }
 
-        /* Print status every 2 seconds */
         if (now - last_print_ms >= 2000) {
             float elapsed = (float)(now - start_ms) / 1000.0f;
             printf("[%6.1fs] RPM: %5d | Speed: %5.1f km/h | Gear: %d | "
@@ -246,8 +396,35 @@ int main(int argc, char **argv)
         hal_delay_ms(20);
     }
 
+    return 0;
+}
+
+int main(int argc, char **argv)
+{
+    signal(SIGINT, signal_handler);
+    signal(SIGTERM, signal_handler);
+
+    bool e46_mode = false;
+    for (int i = 1; i < argc; i++) {
+        if (strcmp(argv[i], "--e46") == 0 || strcmp(argv[i], "-e46") == 0) {
+            e46_mode = true;
+        }
+    }
+
+    if (hal_can_init() != 0) {
+        fprintf(stderr, "Failed to initialize CAN transport\n");
+        return 1;
+    }
+
+    int ret;
+    if (e46_mode) {
+        ret = run_e46_simulator();
+    } else {
+        ret = run_default_simulator();
+    }
+
     hal_can_deinit();
     printf("\nCAN simulator stopped.\n");
 
-    return 0;
+    return ret;
 }
