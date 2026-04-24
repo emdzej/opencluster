@@ -1,29 +1,28 @@
 # ESP32-P4 DSI to Round Display Adapter
 
-Adapter PCB to connect ESP32-P4 DSI output (22-pin) to QT021WQT 2.1" round display (30-pin, 480x480).
+Adapter PCB to connect ESP32-P4 DSI output (15-pin, 1.0mm) to QT021WQT 2.1" round display (30-pin, 0.5mm, 480x480).
 
 ## Connectors
 
-### J1 - ESP32-P4 DSI Input (22-pin, 0.5mm pitch)
+### J1 - ESP32-P4 DSI Input (15-pin, 1.0mm pitch)
 
-| Pin | Signal | GPIO | Description |
-|-----|--------|------|-------------|
-| 1 | ESP_3V3 | — | 3.3V Power |
-| 2 | I2C_SDA | GPIO8 | I2C Data |
-| 3 | I2C_SCL | GPIO9 | I2C Clock |
-| 4 | TP_INT | GPIO? | Touch Interrupt (optional) |
-| 5 | RESET | GPIO? | Display Reset |
-| 6 | TP_RESET | GPIO? | Touch Reset |
-| 7-12 | GND | — | Ground |
-| 13 | DSI_CLK_P | — | MIPI Clock+ |
-| 14 | DSI_CLK_N | — | MIPI Clock- |
-| 15 | GND | — | Ground |
-| 16 | DSI_D1_P | — | MIPI Data Lane 1+ |
-| 17 | DSI_D1_N | — | MIPI Data Lane 1- |
-| 18 | GND | — | Ground |
-| 19 | DSI_D0_P | — | MIPI Data Lane 0+ |
-| 20 | DSI_D0_N | — | MIPI Data Lane 0- |
-| 21-22 | GND | — | Ground |
+| Pin | Signal | Description |
+|-----|--------|-------------|
+| 1 | GND | Ground |
+| 2 | D1_N | MIPI Data Lane 1- |
+| 3 | D1_P | MIPI Data Lane 1+ |
+| 4 | GND | Ground |
+| 5 | CLK_N | MIPI Clock- |
+| 6 | CLK_P | MIPI Clock+ |
+| 7 | GND | Ground |
+| 8 | D0_N | MIPI Data Lane 0- |
+| 9 | D0_P | MIPI Data Lane 0+ |
+| 10 | GND | Ground |
+| 11 | GND | Ground |
+| 12 | SCL | I2C Clock |
+| 13 | SDA | I2C Data |
+| 14 | 3V3 | 3.3V Power |
+| 15 | 3V3 | 3.3V Power |
 
 ### J2 - Display Output (30-pin, 0.5mm pitch)
 
@@ -54,26 +53,41 @@ Adapter PCB to connect ESP32-P4 DSI output (22-pin) to QT021WQT 2.1" round displ
 | 29 | TP-GND | Touch Panel Ground |
 | 30 | TP-IOVCC | Touch Panel 1.8V I/O Power |
 
+### J3 - GPIO Header (optional, 4-pin, 2.54mm)
+
+For signals not on DSI connector (if needed):
+
+| Pin | Signal | Description |
+|-----|--------|-------------|
+| 1 | 3V3 | Power |
+| 2 | GND | Ground |
+| 3 | RESET | Display Reset (GPIO) |
+| 4 | TP_RESET | Touch Reset (GPIO) |
+
 ## Wiring Summary
 
 ```
 ESP32-P4 (J1)             Adapter                Display (J2)
 ─────────────             ───────                ────────────
-Pin 13 (CLK+) ─────────────────────────────────► Pin 16 (TCP)
-Pin 14 (CLK-) ─────────────────────────────────► Pin 17 (TCN)
-Pin 16 (D1+)  ─────────────────────────────────► Pin 13 (DIP)
-Pin 17 (D1-)  ─────────────────────────────────► Pin 14 (DIN)
-Pin 19 (D0+)  ─────────────────────────────────► Pin 10 (DOP)
-Pin 20 (D0-)  ─────────────────────────────────► Pin 11 (DON)
-Pin 2 (SDA)   ─────────────────────────────────► Pin 25 (TP-SDA)
-Pin 3 (SCL)   ─────────────────────────────────► Pin 26 (TP-SCL)
-Pin 4 (TP_INT)◄────────────────────────────────── Pin 24 (TP-INT)
-Pin 5 (RESET) ───[Level 3.3V→1.8V]─────────────► Pin 6 (RESET)
-Pin 6 (TP_RST)───[Level 3.3V→1.8V]─────────────► Pin 27 (TP-RESET)
-Pin 7-12,15,18,21-22 (GND) ────────────────────► Pin 9,12,15,18,29 (GND)
-Pin 1 (3V3)   ──┬──► U1 (LDO) ──► 2.8V ────────► Pin 4,28 (VCI)
-                └──► U2 (LDO) ──► 1.8V ────────► Pin 5,30 (IOVCC)
+Pin 5 (CLK-)  ─────────────────────────────────► Pin 17 (TCN)
+Pin 6 (CLK+)  ─────────────────────────────────► Pin 16 (TCP)
+Pin 8 (D0-)   ─────────────────────────────────► Pin 11 (DON)
+Pin 9 (D0+)   ─────────────────────────────────► Pin 10 (DOP)
+Pin 2 (D1-)   ─────────────────────────────────► Pin 14 (DIN)
+Pin 3 (D1+)   ─────────────────────────────────► Pin 13 (DIP)
+Pin 12 (SCL)  ─────────────────────────────────► Pin 26 (TP-SCL)
+Pin 13 (SDA)  ─────────────────────────────────► Pin 25 (TP-SDA)
+Pin 1,4,7,10,11 (GND) ─────────────────────────► Pin 9,12,15,18,29 (GND)
+Pin 14-15 (3V3) ──┬──► U1 (LDO) ──► 2.8V ──────► Pin 4,28 (VCI)
+                  └──► U2 (LDO) ──► 1.8V ──────► Pin 5,30 (IOVCC)
+
+GPIO (J3) - optional
+────────────────────
+RESET     ──► U3 CH1 ──► 1.8V ─────────────────► Pin 6 (RESET)
+TP_RESET  ──► U3 CH2 ──► 1.8V ─────────────────► Pin 27 (TP-RESET)
 ```
+
+**Note:** The 15-pin DSI connector doesn't include RESET/TP_RESET/TP_INT signals. These must come from separate GPIOs via J3 header, or directly from ESP32-P4 board GPIO.
 
 ## Components
 
@@ -93,10 +107,10 @@ Pin 1 (3V3)   ──┬──► U1 (LDO) ──► 2.8V ───────�
 | U3 | TXB0102 | SOT-23-6 | 2-bit level shifter |
 
 Channels:
-- CH1: RESET (3.3V ESP → 1.8V display)
-- CH2: TP_RESET (3.3V ESP → 1.8V touch)
+- CH1: RESET (3.3V GPIO → 1.8V display)
+- CH2: TP_RESET (3.3V GPIO → 1.8V touch)
 
-Note: TP_INT is 1.8V input to ESP but ESP32-P4 GPIO is 3.3V tolerant with 1.8V threshold, so direct connection OK.
+Note: TP_INT is 1.8V input; ESP32-P4 GPIO is 3.3V tolerant with 1.8V threshold — direct connection OK.
 
 ### Backlight Driver
 
@@ -109,8 +123,9 @@ Note: TP_INT is 1.8V input to ESP but ESP32-P4 GPIO is 3.3V tolerant with 1.8V t
 
 | Ref | Part | Description |
 |-----|------|-------------|
-| J1 | AFC07-S22 or similar | 22-pin 0.5mm FPC |
+| J1 | FCI SFW15R-2STE1LF or similar | 15-pin 1.0mm FPC |
 | J2 | AFC07-S30 or similar | 30-pin 0.5mm FPC |
+| J3 | Pin header 1x4 (optional) | 2.54mm pitch |
 
 ## PCB Notes
 
@@ -118,27 +133,31 @@ Note: TP_INT is 1.8V input to ESP but ESP32-P4 GPIO is 3.3V tolerant with 1.8V t
 2. **Keep CLK, D0, D1 pairs matched in length** (within 0.5mm)
 3. **Ground plane** - solid ground under MIPI traces
 4. **Decoupling caps** - place close to LDO outputs
-5. **Board size** - ~20x30mm (both FPC connectors same pitch)
+5. **Board size** - ~25x30mm
 6. **2-lane MIPI** - ESP32-P4 supports 2 data lanes, use both for better bandwidth
 
 ## Pin Mapping Table
 
 | Function | ESP32-P4 J1 Pin | Display J2 Pin | Notes |
 |----------|-----------------|----------------|-------|
-| MIPI CLK+ | 13 | 16 | Diff pair |
-| MIPI CLK- | 14 | 17 | Diff pair |
-| MIPI D0+ | 19 | 10 | Diff pair |
-| MIPI D0- | 20 | 11 | Diff pair |
-| MIPI D1+ | 16 | 13 | Diff pair |
-| MIPI D1- | 17 | 14 | Diff pair |
-| I2C SDA | 2 | 25 | Touch panel |
-| I2C SCL | 3 | 26 | Touch panel |
-| Touch INT | 4 | 24 | Input to ESP |
-| Reset | 5 | 6 | Via level shifter |
-| Touch Reset | 6 | 27 | Via level shifter |
-| GND | 7-12,15,18,21-22 | 9,12,15,18,29 | Multiple |
-| 3.3V | 1 | — | To LDOs |
+| MIPI CLK+ | 6 | 16 | Diff pair |
+| MIPI CLK- | 5 | 17 | Diff pair |
+| MIPI D0+ | 9 | 10 | Diff pair |
+| MIPI D0- | 8 | 11 | Diff pair |
+| MIPI D1+ | 3 | 13 | Diff pair |
+| MIPI D1- | 2 | 14 | Diff pair |
+| I2C SDA | 13 | 25 | Touch panel |
+| I2C SCL | 12 | 26 | Touch panel |
+| Touch INT | J3/GPIO | 24 | Via level shifter (optional) |
+| Reset | J3.3 | 6 | Via level shifter |
+| Touch Reset | J3.4 | 27 | Via level shifter |
+| GND | 1,4,7,10,11 | 9,12,15,18,29 | Multiple |
+| 3.3V | 14-15 | — | To LDOs |
 | 2.8V | — | 4, 28 | From U1 |
 | 1.8V | — | 5, 30 | From U2 |
 | LED+ | — | 1 | Backlight |
 | LED- | — | 2-3 | Backlight |
+
+## Status
+
+⚠️ **Untested prototype** - Schematic contains component symbols only; wiring must be completed manually in KiCad.
