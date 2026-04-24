@@ -57,97 +57,68 @@
   (net 18 "LED_A")
   (net 19 "LED_K")
 
-  ;; Board outline - 20x30mm (compact, both FPC same pitch)
   (gr_rect
     (start 0 0)
     (end 20 30)
     (stroke (width 0.15) (type solid))
     (fill none)
     (layer "Edge.Cuts")
+    (uuid "00000000-0000-0000-0000-000000000010")
   )
 
-  ;; Mounting holes M2
-  (footprint "MountingHole:MountingHole_2.2mm_M2"
-    (at 2.5 2.5)
-    (layer "F.Cu")
-    (uuid "mh1")
-  )
-  (footprint "MountingHole:MountingHole_2.2mm_M2"
-    (at 17.5 2.5)
-    (layer "F.Cu")
-    (uuid "mh2")
-  )
-  (footprint "MountingHole:MountingHole_2.2mm_M2"
-    (at 2.5 27.5)
-    (layer "F.Cu")
-    (uuid "mh3")
-  )
-  (footprint "MountingHole:MountingHole_2.2mm_M2"
-    (at 17.5 27.5)
-    (layer "F.Cu")
-    (uuid "mh4")
-  )
-
-  ;; Component placement labels
   (gr_text "J1 - ESP32-P4"
-    (at 10 4)
+    (at 10 4 0)
     (layer "F.SilkS")
+    (uuid "00000000-0000-0000-0000-000000000020")
     (effects (font (size 0.8 0.8) (thickness 0.12)))
   )
+
   (gr_text "22-pin 0.5mm"
-    (at 10 5.5)
+    (at 10 5.5 0)
     (layer "F.SilkS")
+    (uuid "00000000-0000-0000-0000-000000000021")
     (effects (font (size 0.6 0.6) (thickness 0.1)))
   )
 
   (gr_text "J2 - Display"
-    (at 10 26)
+    (at 10 26 0)
     (layer "F.SilkS")
+    (uuid "00000000-0000-0000-0000-000000000022")
     (effects (font (size 0.8 0.8) (thickness 0.12)))
   )
+
   (gr_text "30-pin 0.5mm"
-    (at 10 27.5)
+    (at 10 27.5 0)
     (layer "F.SilkS")
+    (uuid "00000000-0000-0000-0000-000000000023")
     (effects (font (size 0.6 0.6) (thickness 0.1)))
   )
 
-  (gr_text "U1"
-    (at 4 15)
+  (gr_text "U1 2V8"
+    (at 4 15 0)
     (layer "F.SilkS")
+    (uuid "00000000-0000-0000-0000-000000000024")
     (effects (font (size 0.6 0.6) (thickness 0.1)))
   )
-  (gr_text "2V8"
-    (at 4 16)
-    (layer "F.SilkS")
-    (effects (font (size 0.5 0.5) (thickness 0.08)))
-  )
 
-  (gr_text "U2"
-    (at 10 15)
+  (gr_text "U2 1V8"
+    (at 10 15 0)
     (layer "F.SilkS")
+    (uuid "00000000-0000-0000-0000-000000000025")
     (effects (font (size 0.6 0.6) (thickness 0.1)))
   )
-  (gr_text "1V8"
-    (at 10 16)
-    (layer "F.SilkS")
-    (effects (font (size 0.5 0.5) (thickness 0.08)))
-  )
 
-  (gr_text "U3"
-    (at 16 15)
+  (gr_text "U3 LVL"
+    (at 16 15 0)
     (layer "F.SilkS")
+    (uuid "00000000-0000-0000-0000-000000000026")
     (effects (font (size 0.6 0.6) (thickness 0.1)))
   )
-  (gr_text "LVL"
-    (at 16 16)
-    (layer "F.SilkS")
-    (effects (font (size 0.5 0.5) (thickness 0.08)))
-  )
 
-  ;; Design rules note
-  (gr_text "MIPI: 100Ω diff, match ±0.5mm"
-    (at 10 21)
+  (gr_text "MIPI: 100R diff"
+    (at 10 21 0)
     (layer "Cmts.User")
+    (uuid "00000000-0000-0000-0000-000000000027")
     (effects (font (size 0.6 0.6) (thickness 0.1)))
   )
 )
