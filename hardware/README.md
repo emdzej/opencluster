@@ -17,6 +17,17 @@ Perfect for mounting behind a round display in a BMW retrofit project.
 
 [View details](esp32p4-automotive/README.md)
 
+### esp32p4-display-adapter
+
+Simple breakout adapter (20×30mm) to connect ESP32-P4 DSI output to round displays:
+- ESP32-P4 DSI input (22-pin, 0.5mm FPC)
+- Display output (30-pin, 0.5mm FPC) for QT021WQT or similar
+- Onboard LDOs: 2.8V (VCI) + 1.8V (IOVCC)
+- Level shifter for RESET signals (3.3V ↔ 1.8V)
+- 2-lane MIPI DSI support
+
+[View details](esp32p4-display-adapter/README.md)
+
 ## Contributing
 
 Hardware designs use KiCad 8.0+. When submitting:

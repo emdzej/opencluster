@@ -1,0 +1,203 @@
+(kicad_sch
+  (version 20231120)
+  (generator "eeschema")
+  (generator_version "8.0")
+  (uuid "a1b2c3d4-e5f6-7890-abcd-ef1234567890")
+  (paper "A4")
+  (title_block
+    (title "ESP32-P4 DSI to Round Display Adapter")
+    (date "2026-04-24")
+    (rev "1.0")
+    (company "bimmerz.app / OpenCluster")
+  )
+
+  ;; ========================================
+  ;; ESP32-P4 DSI Connector J1 (22-pin)
+  ;; ========================================
+  (symbol
+    (lib_id "Connector_Generic:Conn_01x22")
+    (at 38.1 88.9 0)
+    (unit 1)
+    (exclude_from_sim no)
+    (in_bom yes)
+    (on_board yes)
+    (uuid "j1-esp32p4-dsi")
+    (property "Reference" "J1" (at 38.1 35.56 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "ESP32-P4_DSI_22pin" (at 38.1 38.1 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Connector_FFC-FPC:TE_1-84953-2_1x22-1MP_P0.50mm_Horizontal" (at 38.1 88.9 0) (effects (font (size 1.27 1.27)) hide))
+    (pin "1" (uuid "j1-p1") (at 45.72 43.18 180))
+    (pin "2" (uuid "j1-p2") (at 45.72 45.72 180))
+    (pin "3" (uuid "j1-p3") (at 45.72 48.26 180))
+    (pin "4" (uuid "j1-p4") (at 45.72 50.8 180))
+    (pin "5" (uuid "j1-p5") (at 45.72 53.34 180))
+    (pin "6" (uuid "j1-p6") (at 45.72 55.88 180))
+    (pin "7" (uuid "j1-p7") (at 45.72 58.42 180))
+    (pin "8" (uuid "j1-p8") (at 45.72 60.96 180))
+    (pin "9" (uuid "j1-p9") (at 45.72 63.5 180))
+    (pin "10" (uuid "j1-p10") (at 45.72 66.04 180))
+    (pin "11" (uuid "j1-p11") (at 45.72 68.58 180))
+    (pin "12" (uuid "j1-p12") (at 45.72 71.12 180))
+    (pin "13" (uuid "j1-p13") (at 45.72 73.66 180))
+    (pin "14" (uuid "j1-p14") (at 45.72 76.2 180))
+    (pin "15" (uuid "j1-p15") (at 45.72 78.74 180))
+    (pin "16" (uuid "j1-p16") (at 45.72 81.28 180))
+    (pin "17" (uuid "j1-p17") (at 45.72 83.82 180))
+    (pin "18" (uuid "j1-p18") (at 45.72 86.36 180))
+    (pin "19" (uuid "j1-p19") (at 45.72 88.9 180))
+    (pin "20" (uuid "j1-p20") (at 45.72 91.44 180))
+    (pin "21" (uuid "j1-p21") (at 45.72 93.98 180))
+    (pin "22" (uuid "j1-p22") (at 45.72 96.52 180))
+  )
+
+  ;; ========================================
+  ;; Display Connector J2 (30-pin)
+  ;; ========================================
+  (symbol
+    (lib_id "Connector_Generic:Conn_01x30")
+    (at 203.2 88.9 0)
+    (unit 1)
+    (exclude_from_sim no)
+    (in_bom yes)
+    (on_board yes)
+    (uuid "j2-display")
+    (property "Reference" "J2" (at 203.2 25.4 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "Display_30pin" (at 203.2 27.94 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Connector_FFC-FPC:TE_1-84953-0_1x30-1MP_P0.50mm_Horizontal" (at 203.2 88.9 0) (effects (font (size 1.27 1.27)) hide))
+  )
+
+  ;; ========================================
+  ;; LDO 2.8V U1
+  ;; ========================================
+  (symbol
+    (lib_id "Regulator_Linear:AP2127K-2.8")
+    (at 88.9 177.8 0)
+    (unit 1)
+    (exclude_from_sim no)
+    (in_bom yes)
+    (on_board yes)
+    (uuid "u1-ldo-2v8")
+    (property "Reference" "U1" (at 88.9 167.64 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "AP2127K-2.8" (at 88.9 170.18 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Package_TO_SOT_SMD:SOT-23-5" (at 88.9 177.8 0) (effects (font (size 1.27 1.27)) hide))
+  )
+
+  ;; ========================================
+  ;; LDO 1.8V U2
+  ;; ========================================
+  (symbol
+    (lib_id "Regulator_Linear:AP2127K-1.8")
+    (at 139.7 177.8 0)
+    (unit 1)
+    (exclude_from_sim no)
+    (in_bom yes)
+    (on_board yes)
+    (uuid "u2-ldo-1v8")
+    (property "Reference" "U2" (at 139.7 167.64 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "AP2127K-1.8" (at 139.7 170.18 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Package_TO_SOT_SMD:SOT-23-5" (at 139.7 177.8 0) (effects (font (size 1.27 1.27)) hide))
+  )
+
+  ;; ========================================
+  ;; Level Shifter U3 (2-bit for RESET signals)
+  ;; ========================================
+  (symbol
+    (lib_id "Logic_LevelTranslator:TXB0102DCU")
+    (at 127 127 0)
+    (unit 1)
+    (exclude_from_sim no)
+    (in_bom yes)
+    (on_board yes)
+    (uuid "u3-levelshift")
+    (property "Reference" "U3" (at 127 114.3 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "TXB0102" (at 127 116.84 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Package_SON:Texas_DSBGA-6_0.9x1.4mm_Layout2x3_P0.5mm" (at 127 127 0) (effects (font (size 1.27 1.27)) hide))
+  )
+
+  ;; ========================================
+  ;; Net labels - ESP32-P4 side
+  ;; ========================================
+  (label "ESP_3V3" (at 55.88 43.18 0) (effects (font (size 1.27 1.27)) (justify left)))
+  (label "I2C_SDA" (at 55.88 45.72 0) (effects (font (size 1.27 1.27)) (justify left)))
+  (label "I2C_SCL" (at 55.88 48.26 0) (effects (font (size 1.27 1.27)) (justify left)))
+  (label "TP_INT" (at 55.88 50.8 0) (effects (font (size 1.27 1.27)) (justify left)))
+  (label "RESET_3V3" (at 55.88 53.34 0) (effects (font (size 1.27 1.27)) (justify left)))
+  (label "TP_RESET_3V3" (at 55.88 55.88 0) (effects (font (size 1.27 1.27)) (justify left)))
+  (label "GND" (at 55.88 58.42 0) (effects (font (size 1.27 1.27)) (justify left)))
+  (label "GND" (at 55.88 60.96 0) (effects (font (size 1.27 1.27)) (justify left)))
+  (label "GND" (at 55.88 63.5 0) (effects (font (size 1.27 1.27)) (justify left)))
+  (label "GND" (at 55.88 66.04 0) (effects (font (size 1.27 1.27)) (justify left)))
+  (label "GND" (at 55.88 68.58 0) (effects (font (size 1.27 1.27)) (justify left)))
+  (label "GND" (at 55.88 71.12 0) (effects (font (size 1.27 1.27)) (justify left)))
+  (label "MIPI_CLK_P" (at 55.88 73.66 0) (effects (font (size 1.27 1.27)) (justify left)))
+  (label "MIPI_CLK_N" (at 55.88 76.2 0) (effects (font (size 1.27 1.27)) (justify left)))
+  (label "GND" (at 55.88 78.74 0) (effects (font (size 1.27 1.27)) (justify left)))
+  (label "MIPI_D1_P" (at 55.88 81.28 0) (effects (font (size 1.27 1.27)) (justify left)))
+  (label "MIPI_D1_N" (at 55.88 83.82 0) (effects (font (size 1.27 1.27)) (justify left)))
+  (label "GND" (at 55.88 86.36 0) (effects (font (size 1.27 1.27)) (justify left)))
+  (label "MIPI_D0_P" (at 55.88 88.9 0) (effects (font (size 1.27 1.27)) (justify left)))
+  (label "MIPI_D0_N" (at 55.88 91.44 0) (effects (font (size 1.27 1.27)) (justify left)))
+  (label "GND" (at 55.88 93.98 0) (effects (font (size 1.27 1.27)) (justify left)))
+  (label "GND" (at 55.88 96.52 0) (effects (font (size 1.27 1.27)) (justify left)))
+
+  ;; ========================================
+  ;; Net labels - Display side
+  ;; ========================================
+  (label "LED_A" (at 177.8 35.56 180) (effects (font (size 1.27 1.27)) (justify right)))
+  (label "LED_K" (at 177.8 38.1 180) (effects (font (size 1.27 1.27)) (justify right)))
+  (label "LED_K" (at 177.8 40.64 180) (effects (font (size 1.27 1.27)) (justify right)))
+  (label "VCI_2V8" (at 177.8 43.18 180) (effects (font (size 1.27 1.27)) (justify right)))
+  (label "IOVCC_1V8" (at 177.8 45.72 180) (effects (font (size 1.27 1.27)) (justify right)))
+  (label "RESET_1V8" (at 177.8 48.26 180) (effects (font (size 1.27 1.27)) (justify right)))
+  (label "TE" (at 177.8 50.8 180) (effects (font (size 1.27 1.27)) (justify right)))
+  (label "PWM" (at 177.8 53.34 180) (effects (font (size 1.27 1.27)) (justify right)))
+  (label "GND" (at 177.8 55.88 180) (effects (font (size 1.27 1.27)) (justify right)))
+  (label "DOP" (at 177.8 58.42 180) (effects (font (size 1.27 1.27)) (justify right)))
+  (label "DON" (at 177.8 60.96 180) (effects (font (size 1.27 1.27)) (justify right)))
+  (label "GND" (at 177.8 63.5 180) (effects (font (size 1.27 1.27)) (justify right)))
+  (label "DIP" (at 177.8 66.04 180) (effects (font (size 1.27 1.27)) (justify right)))
+  (label "DIN" (at 177.8 68.58 180) (effects (font (size 1.27 1.27)) (justify right)))
+  (label "GND" (at 177.8 71.12 180) (effects (font (size 1.27 1.27)) (justify right)))
+  (label "TCP" (at 177.8 73.66 180) (effects (font (size 1.27 1.27)) (justify right)))
+  (label "TCN" (at 177.8 76.2 180) (effects (font (size 1.27 1.27)) (justify right)))
+  (label "GND" (at 177.8 78.74 180) (effects (font (size 1.27 1.27)) (justify right)))
+  (label "NC" (at 177.8 81.28 180) (effects (font (size 1.27 1.27)) (justify right)))
+  (label "NC" (at 177.8 83.82 180) (effects (font (size 1.27 1.27)) (justify right)))
+  (label "NC" (at 177.8 86.36 180) (effects (font (size 1.27 1.27)) (justify right)))
+  (label "NC" (at 177.8 88.9 180) (effects (font (size 1.27 1.27)) (justify right)))
+  (label "GND" (at 177.8 91.44 180) (effects (font (size 1.27 1.27)) (justify right)))
+  (label "TP_INT" (at 177.8 93.98 180) (effects (font (size 1.27 1.27)) (justify right)))
+  (label "TP_SDA" (at 177.8 96.52 180) (effects (font (size 1.27 1.27)) (justify right)))
+  (label "TP_SCL" (at 177.8 99.06 180) (effects (font (size 1.27 1.27)) (justify right)))
+  (label "TP_RESET_1V8" (at 177.8 101.6 180) (effects (font (size 1.27 1.27)) (justify right)))
+  (label "VCI_2V8" (at 177.8 104.14 180) (effects (font (size 1.27 1.27)) (justify right)))
+  (label "GND" (at 177.8 106.68 180) (effects (font (size 1.27 1.27)) (justify right)))
+  (label "IOVCC_1V8" (at 177.8 109.22 180) (effects (font (size 1.27 1.27)) (justify right)))
+
+  ;; ========================================
+  ;; Text notes
+  ;; ========================================
+  (text "ESP32-P4 DSI Connector (22-pin, 0.5mm pitch)\nJ1 - Input from ESP32-P4 DevKit"
+    (at 25.4 25.4 0)
+    (effects (font (size 2 2)) (justify left))
+  )
+
+  (text "Round Display Connector (30-pin, 0.5mm pitch)\nJ2 - Output to QT021WQT Display"
+    (at 152.4 25.4 0)
+    (effects (font (size 2 2)) (justify left))
+  )
+
+  (text "MIPI DSI Connections:\nCLK: J1.13/14 → J2.16/17\nD0:  J1.19/20 → J2.10/11\nD1:  J1.16/17 → J2.13/14"
+    (at 88.9 55.88 0)
+    (effects (font (size 1.5 1.5)) (justify left))
+  )
+
+  (text "Power: 3.3V → LDOs → 2.8V (VCI) + 1.8V (IOVCC)"
+    (at 88.9 160.02 0)
+    (effects (font (size 1.5 1.5)) (justify left))
+  )
+
+  (text "Level Shifter: 3.3V ↔ 1.8V for RESET signals"
+    (at 106.68 109.22 0)
+    (effects (font (size 1.5 1.5)) (justify left))
+  )
+)

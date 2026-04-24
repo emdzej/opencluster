@@ -1,0 +1,153 @@
+(kicad_pcb
+  (version 20240108)
+  (generator "pcbnew")
+  (generator_version "8.0")
+  (general
+    (thickness 1.6)
+    (legacy_teardrops no)
+  )
+  (paper "A4")
+  (title_block
+    (title "ESP32-P4 DSI to Round Display Adapter")
+    (date "2026-04-24")
+    (rev "1.0")
+    (company "bimmerz.app / OpenCluster")
+  )
+  (layers
+    (0 "F.Cu" signal)
+    (31 "B.Cu" signal)
+    (32 "B.Adhes" user "B.Adhesive")
+    (33 "F.Adhes" user "F.Adhesive")
+    (34 "B.Paste" user)
+    (35 "F.Paste" user)
+    (36 "B.SilkS" user "B.Silkscreen")
+    (37 "F.SilkS" user "F.Silkscreen")
+    (38 "B.Mask" user)
+    (39 "F.Mask" user)
+    (40 "Dwgs.User" user "User.Drawings")
+    (41 "Cmts.User" user "User.Comments")
+    (44 "Edge.Cuts" user)
+  )
+  (setup
+    (pad_to_mask_clearance 0)
+    (allow_soldermask_bridges_in_footprints no)
+    (pcbplotparams
+      (layerselection 0x00010fc_ffffffff)
+      (plot_on_all_layers_selection 0x0000000_00000000)
+    )
+  )
+  (net 0 "")
+  (net 1 "GND")
+  (net 2 "ESP_3V3")
+  (net 3 "VCI_2V8")
+  (net 4 "IOVCC_1V8")
+  (net 5 "MIPI_CLK_P")
+  (net 6 "MIPI_CLK_N")
+  (net 7 "MIPI_D0_P")
+  (net 8 "MIPI_D0_N")
+  (net 9 "MIPI_D1_P")
+  (net 10 "MIPI_D1_N")
+  (net 11 "I2C_SCL")
+  (net 12 "I2C_SDA")
+  (net 13 "RESET_3V3")
+  (net 14 "RESET_1V8")
+  (net 15 "TP_RESET_3V3")
+  (net 16 "TP_RESET_1V8")
+  (net 17 "TP_INT")
+  (net 18 "LED_A")
+  (net 19 "LED_K")
+
+  ;; Board outline - 20x30mm (compact, both FPC same pitch)
+  (gr_rect
+    (start 0 0)
+    (end 20 30)
+    (stroke (width 0.15) (type solid))
+    (fill none)
+    (layer "Edge.Cuts")
+  )
+
+  ;; Mounting holes M2
+  (footprint "MountingHole:MountingHole_2.2mm_M2"
+    (at 2.5 2.5)
+    (layer "F.Cu")
+    (uuid "mh1")
+  )
+  (footprint "MountingHole:MountingHole_2.2mm_M2"
+    (at 17.5 2.5)
+    (layer "F.Cu")
+    (uuid "mh2")
+  )
+  (footprint "MountingHole:MountingHole_2.2mm_M2"
+    (at 2.5 27.5)
+    (layer "F.Cu")
+    (uuid "mh3")
+  )
+  (footprint "MountingHole:MountingHole_2.2mm_M2"
+    (at 17.5 27.5)
+    (layer "F.Cu")
+    (uuid "mh4")
+  )
+
+  ;; Component placement labels
+  (gr_text "J1 - ESP32-P4"
+    (at 10 4)
+    (layer "F.SilkS")
+    (effects (font (size 0.8 0.8) (thickness 0.12)))
+  )
+  (gr_text "22-pin 0.5mm"
+    (at 10 5.5)
+    (layer "F.SilkS")
+    (effects (font (size 0.6 0.6) (thickness 0.1)))
+  )
+
+  (gr_text "J2 - Display"
+    (at 10 26)
+    (layer "F.SilkS")
+    (effects (font (size 0.8 0.8) (thickness 0.12)))
+  )
+  (gr_text "30-pin 0.5mm"
+    (at 10 27.5)
+    (layer "F.SilkS")
+    (effects (font (size 0.6 0.6) (thickness 0.1)))
+  )
+
+  (gr_text "U1"
+    (at 4 15)
+    (layer "F.SilkS")
+    (effects (font (size 0.6 0.6) (thickness 0.1)))
+  )
+  (gr_text "2V8"
+    (at 4 16)
+    (layer "F.SilkS")
+    (effects (font (size 0.5 0.5) (thickness 0.08)))
+  )
+
+  (gr_text "U2"
+    (at 10 15)
+    (layer "F.SilkS")
+    (effects (font (size 0.6 0.6) (thickness 0.1)))
+  )
+  (gr_text "1V8"
+    (at 10 16)
+    (layer "F.SilkS")
+    (effects (font (size 0.5 0.5) (thickness 0.08)))
+  )
+
+  (gr_text "U3"
+    (at 16 15)
+    (layer "F.SilkS")
+    (effects (font (size 0.6 0.6) (thickness 0.1)))
+  )
+  (gr_text "LVL"
+    (at 16 16)
+    (layer "F.SilkS")
+    (effects (font (size 0.5 0.5) (thickness 0.08)))
+  )
+
+  ;; Design rules note
+  (gr_text "MIPI: 100Ω diff, match ±0.5mm"
+    (at 10 21)
+    (layer "Cmts.User")
+    (effects (font (size 0.6 0.6) (thickness 0.1)))
+  )
+)
