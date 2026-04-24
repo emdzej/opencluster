@@ -8,7 +8,7 @@
   )
   (paper "A4")
   (title_block
-    (title "ESP32-P4 DSI to Round Display Adapter (22-pin)")
+    (title "ESP32-P4 DSI to Round Display Adapter (15-pin)")
     (date "2026-04-24")
     (rev "1.0")
     (company "bimmerz.app / OpenCluster")
@@ -53,13 +53,10 @@
   (net 14 "RESET_1V8")
   (net 15 "TP_RESET_3V3")
   (net 16 "TP_RESET_1V8")
-  (net 17 "TP_INT")
-  (net 18 "LED_A")
-  (net 19 "LED_K")
 
   (gr_rect
     (start 0 0)
-    (end 20 30)
+    (end 25 30)
     (stroke (width 0.15) (type solid))
     (fill none)
     (layer "Edge.Cuts")
@@ -67,58 +64,65 @@
   )
 
   (gr_text "J1 - ESP32-P4"
-    (at 10 4 0)
+    (at 12.5 4 0)
     (layer "F.SilkS")
     (uuid "00000000-0000-0000-0000-000000000020")
     (effects (font (size 0.8 0.8) (thickness 0.12)))
   )
 
-  (gr_text "22-pin 0.5mm"
-    (at 10 5.5 0)
+  (gr_text "15-pin 1.0mm"
+    (at 12.5 5.5 0)
     (layer "F.SilkS")
     (uuid "00000000-0000-0000-0000-000000000021")
     (effects (font (size 0.6 0.6) (thickness 0.1)))
   )
 
   (gr_text "J2 - Display"
-    (at 10 26 0)
+    (at 12.5 26 0)
     (layer "F.SilkS")
     (uuid "00000000-0000-0000-0000-000000000022")
     (effects (font (size 0.8 0.8) (thickness 0.12)))
   )
 
   (gr_text "30-pin 0.5mm"
-    (at 10 27.5 0)
+    (at 12.5 27.5 0)
     (layer "F.SilkS")
     (uuid "00000000-0000-0000-0000-000000000023")
     (effects (font (size 0.6 0.6) (thickness 0.1)))
   )
 
-  (gr_text "U1 2V8"
-    (at 4 15 0)
+  (gr_text "J3 GPIO"
+    (at 22 15 0)
     (layer "F.SilkS")
     (uuid "00000000-0000-0000-0000-000000000024")
     (effects (font (size 0.6 0.6) (thickness 0.1)))
   )
 
-  (gr_text "U2 1V8"
-    (at 10 15 0)
+  (gr_text "U1 2V8"
+    (at 5 15 0)
     (layer "F.SilkS")
     (uuid "00000000-0000-0000-0000-000000000025")
     (effects (font (size 0.6 0.6) (thickness 0.1)))
   )
 
-  (gr_text "U3 LVL"
-    (at 16 15 0)
+  (gr_text "U2 1V8"
+    (at 12.5 15 0)
     (layer "F.SilkS")
     (uuid "00000000-0000-0000-0000-000000000026")
     (effects (font (size 0.6 0.6) (thickness 0.1)))
   )
 
-  (gr_text "MIPI: 100R diff"
-    (at 10 21 0)
-    (layer "Cmts.User")
+  (gr_text "U3 LVL"
+    (at 5 20 0)
+    (layer "F.SilkS")
     (uuid "00000000-0000-0000-0000-000000000027")
+    (effects (font (size 0.6 0.6) (thickness 0.1)))
+  )
+
+  (gr_text "MIPI: 100R diff"
+    (at 12.5 22 0)
+    (layer "Cmts.User")
+    (uuid "00000000-0000-0000-0000-000000000028")
     (effects (font (size 0.6 0.6) (thickness 0.1)))
   )
 )

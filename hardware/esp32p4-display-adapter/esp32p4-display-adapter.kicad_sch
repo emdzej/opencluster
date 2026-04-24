@@ -2,10 +2,10 @@
   (version 20231120)
   (generator "eeschema")
   (generator_version "8.0")
-  (uuid "c3d4e5f6-a7b8-9012-cdef-345678901234")
+  (uuid "a1b2c3d4-e5f6-7890-abcd-ef1234567890")
   (paper "A4")
   (title_block
-    (title "ESP32-P4 DSI to Round Display Adapter (22-pin)")
+    (title "ESP32-P4 DSI to Round Display Adapter")
     (date "2026-04-24")
     (rev "1.0")
     (company "bimmerz.app / OpenCluster")
@@ -156,7 +156,7 @@
     (dnp no)
     (uuid "00000000-0000-0000-0000-000000000001")
     (property "Reference" "J1" (at 38.1 55.88 0) (effects (font (size 1.27 1.27))))
-    (property "Value" "ESP32-P4_DSI_22pin" (at 38.1 58.42 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "ESP32-P4_DSI" (at 38.1 58.42 0) (effects (font (size 1.27 1.27))))
     (property "Footprint" "Connector_FFC-FPC:Hirose_FH12-22S-0.5SH_1x22-1MP_P0.50mm_Horizontal" (at 38.1 88.9 0) (effects (font (size 1.27 1.27)) hide))
     (pin "1" (uuid "10000001-0000-0000-0000-000000000001"))
     (pin "2" (uuid "10000002-0000-0000-0000-000000000001"))
@@ -181,8 +181,8 @@
     (pin "21" (uuid "10000021-0000-0000-0000-000000000001"))
     (pin "22" (uuid "10000022-0000-0000-0000-000000000001"))
     (instances
-      (project "esp32p4-display-adapter-22pin"
-        (path "/c3d4e5f6-a7b8-9012-cdef-345678901234" (reference "J1") (unit 1))
+      (project "esp32p4-display-adapter"
+        (path "/a1b2c3d4-e5f6-7890-abcd-ef1234567890" (reference "J1") (unit 1))
       )
     )
   )
@@ -230,8 +230,8 @@
     (pin "29" (uuid "20000029-0000-0000-0000-000000000002"))
     (pin "30" (uuid "20000030-0000-0000-0000-000000000002"))
     (instances
-      (project "esp32p4-display-adapter-22pin"
-        (path "/c3d4e5f6-a7b8-9012-cdef-345678901234" (reference "J2") (unit 1))
+      (project "esp32p4-display-adapter"
+        (path "/a1b2c3d4-e5f6-7890-abcd-ef1234567890" (reference "J2") (unit 1))
       )
     )
   )
@@ -254,8 +254,8 @@
     (pin "4" (uuid "30000004-0000-0000-0000-000000000003"))
     (pin "5" (uuid "30000005-0000-0000-0000-000000000003"))
     (instances
-      (project "esp32p4-display-adapter-22pin"
-        (path "/c3d4e5f6-a7b8-9012-cdef-345678901234" (reference "U1") (unit 1))
+      (project "esp32p4-display-adapter"
+        (path "/a1b2c3d4-e5f6-7890-abcd-ef1234567890" (reference "U1") (unit 1))
       )
     )
   )
@@ -278,8 +278,8 @@
     (pin "4" (uuid "40000004-0000-0000-0000-000000000004"))
     (pin "5" (uuid "40000005-0000-0000-0000-000000000004"))
     (instances
-      (project "esp32p4-display-adapter-22pin"
-        (path "/c3d4e5f6-a7b8-9012-cdef-345678901234" (reference "U2") (unit 1))
+      (project "esp32p4-display-adapter"
+        (path "/a1b2c3d4-e5f6-7890-abcd-ef1234567890" (reference "U2") (unit 1))
       )
     )
   )
@@ -305,13 +305,13 @@
     (pin "7" (uuid "50000007-0000-0000-0000-000000000005"))
     (pin "8" (uuid "50000008-0000-0000-0000-000000000005"))
     (instances
-      (project "esp32p4-display-adapter-22pin"
-        (path "/c3d4e5f6-a7b8-9012-cdef-345678901234" (reference "U3") (unit 1))
+      (project "esp32p4-display-adapter"
+        (path "/a1b2c3d4-e5f6-7890-abcd-ef1234567890" (reference "U3") (unit 1))
       )
     )
   )
 
-  (text "ESP32-P4 DSI to Round Display (22-pin)\n\nMIPI DSI (22-pin 0.5mm):\nJ1.13/14 (CLK) -> J2.16/17 (TCP/TCN)\nJ1.16/17 (D1)  -> J2.13/14 (DIP/DIN)\nJ1.19/20 (D0)  -> J2.10/11 (DOP/DON)\n\nI2C: J1.2/3 -> J2.25/26\nRESET: J1.5 -> U3 -> J2.6\nTP_RESET: J1.6 -> U3 -> J2.27"
+  (text "ESP32-P4 DSI to Round Display Adapter\n\nMIPI DSI Connections:\nJ1.13/14 (CLK) -> J2.16/17 (TCP/TCN)\nJ1.16/17 (D1)  -> J2.13/14 (DIP/DIN)\nJ1.19/20 (D0)  -> J2.10/11 (DOP/DON)\n\nI2C: J1.2/3 -> J2.25/26\nRESET: via U3 level shifter"
     (exclude_from_sim no)
     (at 88.9 25.4 0)
     (effects (font (size 1.5 1.5)) (justify left))

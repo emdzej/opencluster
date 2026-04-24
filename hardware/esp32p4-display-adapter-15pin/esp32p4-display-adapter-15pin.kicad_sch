@@ -2,12 +2,12 @@
   (version 20231120)
   (generator "eeschema")
   (generator_version "8.0")
-  (uuid "a1b2c3d4-e5f6-7890-abcd-ef1234567890")
+  (uuid "d4e5f6a7-b8c9-0123-def4-567890123456")
   (paper "A4")
   (title_block
-    (title "ESP32-P4 DSI to Round Display Adapter")
+    (title "ESP32-P4 DSI to Round Display Adapter (15-pin)")
     (date "2026-04-24")
-    (rev "1.1")
+    (rev "1.0")
     (company "bimmerz.app / OpenCluster")
   )
 
@@ -184,8 +184,8 @@
     (pin "14" (uuid "10000014-0000-0000-0000-000000000001"))
     (pin "15" (uuid "10000015-0000-0000-0000-000000000001"))
     (instances
-      (project "esp32p4-display-adapter"
-        (path "/a1b2c3d4-e5f6-7890-abcd-ef1234567890" (reference "J1") (unit 1))
+      (project "esp32p4-display-adapter-15pin"
+        (path "/d4e5f6a7-b8c9-0123-def4-567890123456" (reference "J1") (unit 1))
       )
     )
   )
@@ -233,8 +233,8 @@
     (pin "29" (uuid "20000029-0000-0000-0000-000000000002"))
     (pin "30" (uuid "20000030-0000-0000-0000-000000000002"))
     (instances
-      (project "esp32p4-display-adapter"
-        (path "/a1b2c3d4-e5f6-7890-abcd-ef1234567890" (reference "J2") (unit 1))
+      (project "esp32p4-display-adapter-15pin"
+        (path "/d4e5f6a7-b8c9-0123-def4-567890123456" (reference "J2") (unit 1))
       )
     )
   )
@@ -256,8 +256,8 @@
     (pin "3" (uuid "33000003-0000-0000-0000-000000000003"))
     (pin "4" (uuid "33000004-0000-0000-0000-000000000003"))
     (instances
-      (project "esp32p4-display-adapter"
-        (path "/a1b2c3d4-e5f6-7890-abcd-ef1234567890" (reference "J3") (unit 1))
+      (project "esp32p4-display-adapter-15pin"
+        (path "/d4e5f6a7-b8c9-0123-def4-567890123456" (reference "J3") (unit 1))
       )
     )
   )
@@ -280,8 +280,8 @@
     (pin "4" (uuid "44000004-0000-0000-0000-000000000004"))
     (pin "5" (uuid "44000005-0000-0000-0000-000000000004"))
     (instances
-      (project "esp32p4-display-adapter"
-        (path "/a1b2c3d4-e5f6-7890-abcd-ef1234567890" (reference "U1") (unit 1))
+      (project "esp32p4-display-adapter-15pin"
+        (path "/d4e5f6a7-b8c9-0123-def4-567890123456" (reference "U1") (unit 1))
       )
     )
   )
@@ -304,8 +304,8 @@
     (pin "4" (uuid "55000004-0000-0000-0000-000000000005"))
     (pin "5" (uuid "55000005-0000-0000-0000-000000000005"))
     (instances
-      (project "esp32p4-display-adapter"
-        (path "/a1b2c3d4-e5f6-7890-abcd-ef1234567890" (reference "U2") (unit 1))
+      (project "esp32p4-display-adapter-15pin"
+        (path "/d4e5f6a7-b8c9-0123-def4-567890123456" (reference "U2") (unit 1))
       )
     )
   )
@@ -331,13 +331,13 @@
     (pin "7" (uuid "66000007-0000-0000-0000-000000000006"))
     (pin "8" (uuid "66000008-0000-0000-0000-000000000006"))
     (instances
-      (project "esp32p4-display-adapter"
-        (path "/a1b2c3d4-e5f6-7890-abcd-ef1234567890" (reference "U3") (unit 1))
+      (project "esp32p4-display-adapter-15pin"
+        (path "/d4e5f6a7-b8c9-0123-def4-567890123456" (reference "U3") (unit 1))
       )
     )
   )
 
-  (text "ESP32-P4 DSI to Round Display Adapter\n\nMIPI DSI (15-pin 1.0mm):\nJ1.5/6 (CLK) -> J2.17/16 (TCN/TCP)\nJ1.8/9 (D0)  -> J2.11/10 (DON/DOP)\nJ1.2/3 (D1)  -> J2.14/13 (DIN/DIP)\n\nI2C: J1.12/13 -> J2.26/25\nGPIO: J3 for RESET, TP_RESET"
+  (text "ESP32-P4 DSI to Round Display (15-pin)\nSame pinout as Raspberry Pi\n\nMIPI DSI:\nJ1.5/6 (CLK) -> J2.17/16 (TCN/TCP)\nJ1.8/9 (D0)  -> J2.11/10 (DON/DOP)\nJ1.2/3 (D1)  -> J2.14/13 (DIN/DIP)\n\nI2C: J1.12/13 -> J2.26/25\nGPIO: J3 for RESET, TP_RESET"
     (exclude_from_sim no)
     (at 88.9 25.4 0)
     (effects (font (size 1.5 1.5)) (justify left))

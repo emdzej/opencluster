@@ -17,6 +17,17 @@ Perfect for mounting behind a round display in a BMW retrofit project.
 
 [View details](esp32p4-automotive/README.md)
 
+### esp32p4-display-adapter
+
+Breakout adapter (20×30mm) for ESP32-P4 dev boards with **22-pin 0.5mm** DSI connector:
+- ESP32-P4 DSI input (22-pin, 0.5mm FPC)
+- Display output (30-pin, 0.5mm FPC) for QT021WQT or similar
+- Onboard LDOs: 2.8V (VCI) + 1.8V (IOVCC)
+- Level shifter for RESET signals (3.3V ↔ 1.8V)
+- 2-lane MIPI DSI support
+
+[View details](esp32p4-display-adapter/README.md)
+
 ### esp32p4-display-adapter-15pin
 
 Breakout adapter (25×30mm) for ESP32-P4 dev boards with **15-pin 1.0mm** DSI connector:
@@ -28,18 +39,6 @@ Breakout adapter (25×30mm) for ESP32-P4 dev boards with **15-pin 1.0mm** DSI co
 - 2-lane MIPI DSI support
 
 [View details](esp32p4-display-adapter-15pin/README.md)
-
-### esp32p4-display-adapter-22pin
-
-Breakout adapter (20×30mm) for ESP32-P4 dev boards with **22-pin 0.5mm** DSI connector:
-- ESP32-P4 DSI input (22-pin, 0.5mm FPC) — includes all control signals
-- Display output (30-pin, 0.5mm FPC) for QT021WQT or similar
-- No GPIO header needed — RESET/TP_INT on DSI connector
-- Onboard LDOs: 2.8V (VCI) + 1.8V (IOVCC)
-- Level shifter TXB0102 (3.3V ↔ 1.8V)
-- 2-lane MIPI DSI support
-
-[View details](esp32p4-display-adapter-22pin/README.md)
 
 ### rpi-display-adapter
 

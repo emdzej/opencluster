@@ -1,31 +1,29 @@
-# ESP32-P4 DSI to Round Display Adapter (22-pin variant)
+# ESP32-P4 DSI to Round Display Adapter
 
-Adapter PCB to connect ESP32-P4 DSI output (22-pin, 0.5mm) to QT021WQT 2.1" round display (30-pin, 0.5mm, 480x480).
-
-**For dev boards with 22-pin 0.5mm DSI connector.**
+Adapter PCB to connect ESP32-P4 DSI output (22-pin) to QT021WQT 2.1" round display (30-pin, 480x480).
 
 ## Connectors
 
 ### J1 - ESP32-P4 DSI Input (22-pin, 0.5mm pitch)
 
-| Pin | Signal | Description |
-|-----|--------|-------------|
-| 1 | 3V3 | 3.3V Power |
-| 2 | SDA | I2C Data |
-| 3 | SCL | I2C Clock |
-| 4 | TP_INT | Touch Interrupt |
-| 5 | RESET | Display Reset |
-| 6 | TP_RESET | Touch Reset |
-| 7-12 | GND | Ground |
-| 13 | CLK_P | MIPI Clock+ |
-| 14 | CLK_N | MIPI Clock- |
-| 15 | GND | Ground |
-| 16 | D1_P | MIPI Data Lane 1+ |
-| 17 | D1_N | MIPI Data Lane 1- |
-| 18 | GND | Ground |
-| 19 | D0_P | MIPI Data Lane 0+ |
-| 20 | D0_N | MIPI Data Lane 0- |
-| 21-22 | GND | Ground |
+| Pin | Signal | GPIO | Description |
+|-----|--------|------|-------------|
+| 1 | ESP_3V3 | — | 3.3V Power |
+| 2 | I2C_SDA | GPIO8 | I2C Data |
+| 3 | I2C_SCL | GPIO9 | I2C Clock |
+| 4 | TP_INT | GPIO? | Touch Interrupt (optional) |
+| 5 | RESET | GPIO? | Display Reset |
+| 6 | TP_RESET | GPIO? | Touch Reset |
+| 7-12 | GND | — | Ground |
+| 13 | DSI_CLK_P | — | MIPI Clock+ |
+| 14 | DSI_CLK_N | — | MIPI Clock- |
+| 15 | GND | — | Ground |
+| 16 | DSI_D1_P | — | MIPI Data Lane 1+ |
+| 17 | DSI_D1_N | — | MIPI Data Lane 1- |
+| 18 | GND | — | Ground |
+| 19 | DSI_D0_P | — | MIPI Data Lane 0+ |
+| 20 | DSI_D0_N | — | MIPI Data Lane 0- |
+| 21-22 | GND | — | Ground |
 
 ### J2 - Display Output (30-pin, 0.5mm pitch)
 
@@ -77,8 +75,6 @@ Pin 1 (3V3)   ──┬──► U1 (LDO) ──► 2.8V ───────�
                 └──► U2 (LDO) ──► 1.8V ────────► Pin 5,30 (IOVCC)
 ```
 
-**Note:** 22-pin connector includes all control signals (RESET, TP_RESET, TP_INT) — no separate GPIO header needed.
-
 ## Components
 
 ### Power Supply
@@ -97,10 +93,10 @@ Pin 1 (3V3)   ──┬──► U1 (LDO) ──► 2.8V ───────�
 | U3 | TXB0102 | SOT-23-6 | 2-bit level shifter |
 
 Channels:
-- CH1: RESET (3.3V → 1.8V)
-- CH2: TP_RESET (3.3V → 1.8V)
+- CH1: RESET (3.3V ESP → 1.8V display)
+- CH2: TP_RESET (3.3V ESP → 1.8V touch)
 
-Note: TP_INT is 1.8V input; ESP32-P4 GPIO is 3.3V tolerant with 1.8V threshold — direct connection OK.
+Note: TP_INT is 1.8V input to ESP but ESP32-P4 GPIO is 3.3V tolerant with 1.8V threshold, so direct connection OK.
 
 ### Backlight Driver
 
@@ -113,7 +109,7 @@ Note: TP_INT is 1.8V input; ESP32-P4 GPIO is 3.3V tolerant with 1.8V threshold �
 
 | Ref | Part | Description |
 |-----|------|-------------|
-| J1 | Hirose FH12-22S-0.5SH or similar | 22-pin 0.5mm FPC |
+| J1 | AFC07-S22 or similar | 22-pin 0.5mm FPC |
 | J2 | AFC07-S30 or similar | 30-pin 0.5mm FPC |
 
 ## PCB Notes
@@ -122,8 +118,8 @@ Note: TP_INT is 1.8V input; ESP32-P4 GPIO is 3.3V tolerant with 1.8V threshold �
 2. **Keep CLK, D0, D1 pairs matched in length** (within 0.5mm)
 3. **Ground plane** - solid ground under MIPI traces
 4. **Decoupling caps** - place close to LDO outputs
-5. **Board size** - ~20x30mm (both FPC connectors 0.5mm pitch)
-6. **2-lane MIPI** - use both data lanes for better bandwidth
+5. **Board size** - ~20x30mm (both FPC connectors same pitch)
+6. **2-lane MIPI** - ESP32-P4 supports 2 data lanes, use both for better bandwidth
 
 ## Pin Mapping Table
 
@@ -137,7 +133,7 @@ Note: TP_INT is 1.8V input; ESP32-P4 GPIO is 3.3V tolerant with 1.8V threshold �
 | MIPI D1- | 17 | 14 | Diff pair |
 | I2C SDA | 2 | 25 | Touch panel |
 | I2C SCL | 3 | 26 | Touch panel |
-| Touch INT | 4 | 24 | Direct (1.8V→3.3V OK) |
+| Touch INT | 4 | 24 | Input to ESP |
 | Reset | 5 | 6 | Via level shifter |
 | Touch Reset | 6 | 27 | Via level shifter |
 | GND | 7-12,15,18,21-22 | 9,12,15,18,29 | Multiple |
@@ -146,7 +142,3 @@ Note: TP_INT is 1.8V input; ESP32-P4 GPIO is 3.3V tolerant with 1.8V threshold �
 | 1.8V | — | 5, 30 | From U2 |
 | LED+ | — | 1 | Backlight |
 | LED- | — | 2-3 | Backlight |
-
-## Status
-
-⚠️ **Untested prototype** - Schematic contains component symbols only; wiring must be completed manually in KiCad.
