@@ -1,6 +1,8 @@
-# ESP32-P4 DSI to Round Display Adapter
+# ESP32-P4 DSI to Round Display Adapter (15-pin variant)
 
 Adapter PCB to connect ESP32-P4 DSI output (15-pin, 1.0mm) to QT021WQT 2.1" round display (30-pin, 0.5mm, 480x480).
+
+**For dev boards with 15-pin 1.0mm DSI connector (same pinout as Raspberry Pi).**
 
 ## Connectors
 

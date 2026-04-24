@@ -1,0 +1,51 @@
+{
+  "meta": {
+    "filename": "esp32p4-display-adapter-22pin.kicad_pro",
+    "version": 1
+  },
+  "net_settings": {
+    "classes": [
+      {
+        "name": "Default",
+        "clearance": 0.2,
+        "track_width": 0.2,
+        "via_diameter": 0.6,
+        "via_drill": 0.3,
+        "diff_pair_width": 0.1,
+        "diff_pair_gap": 0.1
+      },
+      {
+        "name": "MIPI",
+        "clearance": 0.15,
+        "track_width": 0.1,
+        "via_diameter": 0.4,
+        "via_drill": 0.2,
+        "diff_pair_width": 0.1,
+        "diff_pair_gap": 0.1
+      }
+    ],
+    "meta": {
+      "version": 3
+    }
+  },
+  "pcbnew": {
+    "last_paths": {
+      "gencad": "",
+      "idf": "",
+      "netlist": "",
+      "plot": "",
+      "pos_files": "",
+      "specctra_dsn": "",
+      "step": "",
+      "svg": "",
+      "vrml": ""
+    },
+    "page_layout_descr_file": ""
+  },
+  "schematic": {
+    "legacy_lib_dir": "",
+    "legacy_lib_list": []
+  },
+  "sheets": [],
+  "text_variables": {}
+}
