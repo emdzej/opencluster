@@ -28,6 +28,18 @@ Simple breakout adapter (20×30mm) to connect ESP32-P4 DSI output to round displ
 
 [View details](esp32p4-display-adapter/README.md)
 
+### rpi-display-adapter
+
+Breakout adapter (25×35mm) to connect Raspberry Pi 4 DSI output to round displays:
+- RPi DSI input (15-pin, 1.0mm FPC)
+- Display output (30-pin, 0.5mm FPC) for QT021WQT or similar
+- GPIO header for control signals (RESET, TP_INT, PWM)
+- Onboard LDOs: 2.8V (VCI) + 1.8V (IOVCC)
+- 4-channel level shifter TXB0104 (3.3V ↔ 1.8V)
+- 1 or 2-lane MIPI DSI support
+
+[View details](rpi-display-adapter/README.md)
+
 ## Contributing
 
 Hardware designs use KiCad 8.0+. When submitting:

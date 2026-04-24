@@ -1,0 +1,133 @@
+(kicad_pcb
+  (version 20240108)
+  (generator "pcbnew")
+  (generator_version "8.0")
+  (general
+    (thickness 1.6)
+    (legacy_teardrops no)
+  )
+  (paper "A4")
+  (title_block
+    (title "RPi DSI to Round Display Adapter")
+    (date "2026-04-24")
+    (rev "1.0")
+    (company "bimmerz.app / OpenCluster")
+  )
+  (layers
+    (0 "F.Cu" signal)
+    (31 "B.Cu" signal)
+    (32 "B.Adhes" user "B.Adhesive")
+    (33 "F.Adhes" user "F.Adhesive")
+    (34 "B.Paste" user)
+    (35 "F.Paste" user)
+    (36 "B.SilkS" user "B.Silkscreen")
+    (37 "F.SilkS" user "F.Silkscreen")
+    (38 "B.Mask" user)
+    (39 "F.Mask" user)
+    (40 "Dwgs.User" user "User.Drawings")
+    (41 "Cmts.User" user "User.Comments")
+    (44 "Edge.Cuts" user)
+  )
+  (setup
+    (pad_to_mask_clearance 0)
+    (allow_soldermask_bridges_in_footprints no)
+    (pcbplotparams
+      (layerselection 0x00010fc_ffffffff)
+      (plot_on_all_layers_selection 0x0000000_00000000)
+    )
+  )
+  (net 0 "")
+  (net 1 "GND")
+  (net 2 "3V3")
+  (net 3 "VCI_2V8")
+  (net 4 "IOVCC_1V8")
+  (net 5 "MIPI_CLK_P")
+  (net 6 "MIPI_CLK_N")
+  (net 7 "MIPI_D0_P")
+  (net 8 "MIPI_D0_N")
+  (net 9 "MIPI_D1_P")
+  (net 10 "MIPI_D1_N")
+  (net 11 "I2C_SCL")
+  (net 12 "I2C_SDA")
+  (net 13 "RESET_3V3")
+  (net 14 "RESET_1V8")
+  (net 15 "TP_RESET_3V3")
+  (net 16 "TP_RESET_1V8")
+  (net 17 "TP_INT_3V3")
+  (net 18 "TP_INT_1V8")
+  (net 19 "PWM")
+  (net 20 "LED_A")
+  (net 21 "LED_K")
+
+  (gr_rect
+    (start 0 0)
+    (end 25 35)
+    (stroke (width 0.15) (type solid))
+    (fill none)
+    (layer "Edge.Cuts")
+    (uuid "00000000-0000-0000-0000-000000000010")
+  )
+
+  (gr_text "J1 - RPi DSI"
+    (at 12.5 4 0)
+    (layer "F.SilkS")
+    (uuid "00000000-0000-0000-0000-000000000020")
+    (effects (font (size 0.8 0.8) (thickness 0.12)))
+  )
+
+  (gr_text "15-pin 1.0mm"
+    (at 12.5 5.5 0)
+    (layer "F.SilkS")
+    (uuid "00000000-0000-0000-0000-000000000021")
+    (effects (font (size 0.6 0.6) (thickness 0.1)))
+  )
+
+  (gr_text "J2 - Display"
+    (at 12.5 31 0)
+    (layer "F.SilkS")
+    (uuid "00000000-0000-0000-0000-000000000022")
+    (effects (font (size 0.8 0.8) (thickness 0.12)))
+  )
+
+  (gr_text "30-pin 0.5mm"
+    (at 12.5 32.5 0)
+    (layer "F.SilkS")
+    (uuid "00000000-0000-0000-0000-000000000023")
+    (effects (font (size 0.6 0.6) (thickness 0.1)))
+  )
+
+  (gr_text "J3 GPIO"
+    (at 22 17.5 0)
+    (layer "F.SilkS")
+    (uuid "00000000-0000-0000-0000-000000000024")
+    (effects (font (size 0.6 0.6) (thickness 0.1)))
+  )
+
+  (gr_text "U1 2V8"
+    (at 5 17 0)
+    (layer "F.SilkS")
+    (uuid "00000000-0000-0000-0000-000000000025")
+    (effects (font (size 0.6 0.6) (thickness 0.1)))
+  )
+
+  (gr_text "U2 1V8"
+    (at 12.5 17 0)
+    (layer "F.SilkS")
+    (uuid "00000000-0000-0000-0000-000000000026")
+    (effects (font (size 0.6 0.6) (thickness 0.1)))
+  )
+
+  (gr_text "U3 LVL"
+    (at 5 24 0)
+    (layer "F.SilkS")
+    (uuid "00000000-0000-0000-0000-000000000027")
+    (effects (font (size 0.6 0.6) (thickness 0.1)))
+  )
+
+  (gr_text "MIPI: 100R diff"
+    (at 12.5 27 0)
+    (layer "Cmts.User")
+    (uuid "00000000-0000-0000-0000-000000000028")
+    (effects (font (size 0.6 0.6) (thickness 0.1)))
+  )
+)
